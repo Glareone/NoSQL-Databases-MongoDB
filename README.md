@@ -37,3 +37,21 @@ You have to leave your process running (cmd console should be opened) to work wi
 
 And now you are in the mongo shell where you can run your commands and queries.
 </details>
+
+<details>
+<summary>Section - 1: Simple commands</summary>
+
+* show dbs - will show existing dbs in selected repository (--dbpath "D:\mongodb-data\db")
+* use Your_db_name - will switch to db with selected name. If db does not exist - it will create it automatically.
+* db.products.insertOne({name: "A Book", price: 29.99}) - will create a table named products (it does not exist too) 
+in db which we connected to and insert a document inside it.  
+Pay attention on non-existing quotation mark in "keys" - you can use key naming without quotations, they will be added
+under the hood.  
+
+Here is a console output. InsertedId - generated uniqueId for this insert, acknowledged - verified that this data was inserted.
+![console output](Section-1/7-console-output-after-insert.jpg)
+
+* db.products.find() - retrieves you all data from collection (from table in SQL world).
+* db.products.find().pretty() - show this data formatted.
+![pretty](Section-1/8-find-pretty.jpg)
+</details>

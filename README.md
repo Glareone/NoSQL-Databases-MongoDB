@@ -13,12 +13,19 @@ BSON data-format and what is under the hood:
 MongoDB Ecosystem:
 ![Ecosystem](Section-1/4-ecosystem.jpg)
 
+Work with MongoDB:
+![mongodb](Section-1/9-work-with-mongo.jpg)
+![mongodb2](Section-1/10-inside.jpg)
+
+## Start working with MongoDB
+
 To add mongo command to your command line:  
 <b> win - environment variables - advanced tab - environment variables</b>  
 Add here a path to your mongoDB.
 ![image how to do that](Section-1/5-cmd-configuration.jpg)
 
 [useful link](https://dangphongvanthanh.wordpress.com/2017/06/12/add-mongos-bin-folder-to-the-path-environment-variable/)
+
 
 BTW, to continue working with course you have to stop MongoDB service and start db manually
 using "mongo" command from console. Without it "mongo" command will open mongo service instead of real db.

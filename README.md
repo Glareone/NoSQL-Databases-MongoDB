@@ -88,6 +88,16 @@ BTW, you can't insert another document with the same _id.
 
 * CRUD Operations:
 ![crud](Section-2/4-crud-1.jpg)
-![crud](Section-2/4-crud-2.jpg)
+![crud](Section-2/5-crud-2.jpg)
+
+* Delete:  
+`db.flight.deleteOne({departureAirport: "TXL"})` - departureAirport: "TXL" will be used as filter to find what exactly
+ we want to delete from collection. Only first found document with "TXL" will be deleted.
+
+* Update:  
+`db.flight.updateOne({distance: 12000}, {$set: {marker: "new field delete"}})` - will update first document which contains distance: 12000.  
+Pay attention on <b>$set</b> - all reserved words start from dollar sign. 
+This operator means that you would like to update your document with new field.
+`db.flight.updateMany({}, {$set: {marker: "to Delete!"}})` - empty curly braces `{}` mean all documents in collection.
 
 </details>

@@ -108,4 +108,22 @@ Simple filter: `db.flight.find({intercontinental: true}).pretty()`;
 Greater than ($gt): `db.flight.find({distance: {$gt: 10000}}).pretty()`;
 FindOne: `db.flight.findOne({distance: {$gt: 10000}})`
 
+* Update:  
+
+`update` operation works like `updateMany`:  
+![crud](Section-2/7-update.jpg)
+
+As you may have noticed first modification using set to `delayed: true` has no modified results because our document already
+has this value. When we changed the value to false - log shows us that our value has been changed.
+
+The difference between them - you can use it without `$set` operator, update does accept this syntax.
+But it works on another manner:
+![crud](Section-2/8-update-2.jpg)
+
+It will override all key-value pairs in document!
+![crud](Section-2/9-update-3.jpg)
+
+It works very close to `replaceOne`:
+![crud](Section-2/10-replaceone.jpg)
+
 </details>

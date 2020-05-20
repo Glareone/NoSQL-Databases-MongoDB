@@ -75,7 +75,7 @@ Here is a console output. InsertedId - generated uniqueId for this insert, ackno
 </details>
 
 <details>
-<summary>Section - 2: Basics & CRUD operations</summary>
+<summary>Section - 2: JSON-vs-BSON, Basics & CRUD operations</summary>
 
 * Json vs Bson:
 
@@ -85,5 +85,9 @@ Here is a console output. InsertedId - generated uniqueId for this insert, ackno
 BTW, you can't insert another document with the same _id.
 
 ![id](Section-2/3-_id-field.jpg)
+
+* CRUD Operations:
+![crud](Section-2/4-crud-1.jpg)
+![crud](Section-2/4-crud-2.jpg)
 
 </details>

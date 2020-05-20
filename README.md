@@ -126,4 +126,18 @@ It will override all key-value pairs in document!
 It works very close to `replaceOne`:
 ![crud](Section-2/10-replaceone.jpg)
 
+* InsertMany and Show results using find. Cursor:  
+find does not show you all results, it shows you a cursor by default:  
+![cursor](Section-2/11-insert-many.jpg)
+![cursor](Section-2/12-find-cursor.jpg)
+
+* forEach:  
+It is possible to use .forEach operation after find() to do something with every element after filtering:
+`db.passengers.find().forEach((passengerData) => {printjson(passengerData)})` - bare in mind forEach uses syntax according
+your MongoDB driver. Shell uses Nodejs syntax.
+
+Pay attention:
+That's why you cant use `pretty()` after findOne() method - `pretty()` is a method of a Cursor, findOne does not return cursor,
+(and `pretty()` does not exist for a single value), findOne returns a sole value.
+
 </details>

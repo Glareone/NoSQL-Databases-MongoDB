@@ -100,4 +100,7 @@ Pay attention on <b>$set</b> - all reserved words start from dollar sign.
 This operator means that you would like to update your document with new field.
 `db.flight.updateMany({}, {$set: {marker: "to Delete!"}})` - empty curly braces `{}` mean all documents in collection.
 
+![crud](Section-2/6-insert-many.jpg)
+bare in mind that mongodb will increment Id to keep the proper element's order. First came element will contain minor identifier. 
+
 </details>

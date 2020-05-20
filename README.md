@@ -75,7 +75,7 @@ Here is a console output. InsertedId - generated uniqueId for this insert, ackno
 </details>
 
 <details>
-<summary>Section - 2: Basics & CRUD operations</summary>
+<summary>Section - 2: JSON-vs-BSON, Basics & CRUD operations</summary>
 
 * Json vs Bson:
 
@@ -85,5 +85,59 @@ Here is a console output. InsertedId - generated uniqueId for this insert, ackno
 BTW, you can't insert another document with the same _id.
 
 ![id](Section-2/3-_id-field.jpg)
+
+* CRUD Operations:
+![crud](Section-2/4-crud-1.jpg)
+![crud](Section-2/5-crud-2.jpg)
+
+* Delete:  
+`db.flight.deleteOne({departureAirport: "TXL"})` - departureAirport: "TXL" will be used as filter to find what exactly
+ we want to delete from collection. Only first found document with "TXL" will be deleted.
+
+* Update:  
+`db.flight.updateOne({distance: 12000}, {$set: {marker: "new field delete"}})` - will update first document which contains distance: 12000.  
+Pay attention on <b>$set</b> - all reserved words start from dollar sign. 
+This operator means that you would like to update your document with new field.
+`db.flight.updateMany({}, {$set: {marker: "to Delete!"}})` - empty curly braces `{}` mean all documents in collection.
+
+![crud](Section-2/6-insert-many.jpg)
+bare in mind that mongodb will increment Id to keep the proper element's order. First came element will contain minor identifier. 
+
+* Read:  
+Simple filter: `db.flight.find({intercontinental: true}).pretty()`;
+Greater than ($gt): `db.flight.find({distance: {$gt: 10000}}).pretty()`;
+FindOne: `db.flight.findOne({distance: {$gt: 10000}})`
+
+* Update:  
+
+`update` operation works like `updateMany`:  
+![crud](Section-2/7-update.jpg)
+
+As you may have noticed first modification using set to `delayed: true` has no modified results because our document already
+has this value. When we changed the value to false - log shows us that our value has been changed.
+
+The difference between them - you can use it without `$set` operator, update does accept this syntax.
+But it works on another manner:
+![crud](Section-2/8-update-2.jpg)
+
+It will override all key-value pairs in document!
+![crud](Section-2/9-update-3.jpg)
+
+It works very close to `replaceOne`:
+![crud](Section-2/10-replaceone.jpg)
+
+* InsertMany and Show results using find. Cursor:  
+find does not show you all results, it shows you a cursor by default:  
+![cursor](Section-2/11-insert-many.jpg)
+![cursor](Section-2/12-find-cursor.jpg)
+
+* forEach:  
+It is possible to use .forEach operation after find() to do something with every element after filtering:
+`db.passengers.find().forEach((passengerData) => {printjson(passengerData)})` - bare in mind forEach uses syntax according
+your MongoDB driver. Shell uses Nodejs syntax.
+
+Pay attention:
+That's why you cant use `pretty()` after findOne() method - `pretty()` is a method of a Cursor, findOne does not return cursor,
+(and `pretty()` does not exist for a single value), findOne returns a sole value.
 
 </details>

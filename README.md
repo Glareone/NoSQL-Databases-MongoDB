@@ -103,4 +103,9 @@ This operator means that you would like to update your document with new field.
 ![crud](Section-2/6-insert-many.jpg)
 bare in mind that mongodb will increment Id to keep the proper element's order. First came element will contain minor identifier. 
 
+* Read:  
+Simple filter: `db.flight.find({intercontinental: true}).pretty()`;
+Greater than ($gt): `db.flight.find({distance: {$gt: 10000}}).pretty()`;
+FindOne: `db.flight.findOne({distance: {$gt: 10000}})`
+
 </details>

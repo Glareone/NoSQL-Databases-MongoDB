@@ -140,4 +140,8 @@ Pay attention:
 That's why you cant use `pretty()` after findOne() method - `pretty()` is a method of a Cursor, findOne does not return cursor,
 (and `pretty()` does not exist for a single value), findOne returns a sole value.
 
+* Projection:
+
+* Embedded Documents & Arrays:
+
 </details>

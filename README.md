@@ -160,7 +160,33 @@ By default it will send you objects with _id (because it is a default property) 
 
 To only name - `find({}, {name: 1, _id: 0})`/
 
-* Embedded Documents & Arrays:
+</details>
+
+<details>
+<summary>Section - 2: Embedded Documents & Arrays</summary>
+
+![embedded](Section-2/16-Embedded-doc.jpg)
+![embedded](Section-2/17-Embedded-array.jpg)
+
+* Array examples:
+
+![arrays](Section-2/18-embedded-doc-example.jpg)
+![arrays](Section-2/19-embedded-doc-example-2.jpg)
+  
+* Simple arrays with find method:
+
+![arrays](Section-2/20-arrays-of-string.jpg)
+![arrays](Section-2/21-arrays-filter-by.jpg)
+
+* Array of objects with find method:
+to use find in embedded document you have to use ".":
+`find({"status.description": "your_value"})`
+
+description is an embedded document inside status.  
+Pay attention that you must use double quotation around `status.description`.
+
+![arrays](Section-2/22-arrays-filter-by.jpg)
+![arrays](Section-2/23-arrays-filter-by.jpg)
 
 </details>
 

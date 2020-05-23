@@ -140,8 +140,27 @@ Pay attention:
 That's why you cant use `pretty()` after findOne() method - `pretty()` is a method of a Cursor, findOne does not return cursor,
 (and `pretty()` does not exist for a single value), findOne returns a sole value.
 
-* Projection:
+</details>
+
+<details>
+<summary>Section - 2: Projection</summary>
+
+### Projection:
+Projection means a mechanism to avoid overfetching from database.  
+You can use it as a parameter in `find` method:
+* `find({}, {name: 1})` - first parameter is a filter, the second is projection. 1 means - "include this data".
+
+![projection](Section-2/13-projection-overfetching.jpg)
+![projection](Section-2/14-projection-2.jpg)
+
+By default it will send you objects with _id (because it is a default property) and "name".
+
+* To exclude _id (or any other field) - `find({}, {_id: 0})` - 0 means exclude.
+![projection](Section-2/15-projection-3.jpg)
+
+To only name - `find({}, {name: 1, _id: 0})`/
 
 * Embedded Documents & Arrays:
 
 </details>
+

@@ -193,3 +193,8 @@ Pay attention that you must use double quotation around `status.description`.
 
 </details>
 
+<details>
+<summary>Section - 3: Schema and Relations</summary>
+
+
+</details>

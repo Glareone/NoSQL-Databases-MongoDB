@@ -194,7 +194,15 @@ Pay attention that you must use double quotation around `status.description`.
 </details>
 
 <details>
-<summary>Section - 3: Schema and Relations</summary>
+<summary>Section - 3: Schema, Data Types and Relations</summary>
 
+![schema](Section-3/1-schema.jpg)
+![schema](Section-3/2-schemaless-to-sqlworld.jpg)
+![schema](Section-3/3-schemaless-to-sqlworld-2.jpg)
+
+* SQL Approach (the same structure for all documents):  
+You can assign null to your property. The value of such property will not be assign, but the property will be shown
+in your data structure.
+`db.products.insertOne({name: "Book", details: null})`
 
 </details>

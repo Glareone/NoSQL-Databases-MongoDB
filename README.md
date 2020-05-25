@@ -194,7 +194,7 @@ Pay attention that you must use double quotation around `status.description`.
 </details>
 
 <details>
-<summary>Section - 3: Schema</summary>
+<summary>Section - 3: Schema Basis</summary>
 
 ![schema](Section-3/1-schema.jpg)
 ![schema](Section-3/2-schemaless-to-sqlworld.jpg)
@@ -205,6 +205,12 @@ You can assign null to your property. The value of such property will not be ass
 in your data structure.
 `db.products.insertOne({name: "Book", details: null})`
 
+</details>
+
+<details>
+<summary>Section - 3: Data Schemas, Data Modelling, Relations</summary>
+
+![data-modelling](Section-3/6-data-modelling.jpg)
 </details>
 
 <details>
@@ -227,3 +233,4 @@ To prove that it stores a number instead of float you can use `typeof db.numbers
 3. NumberLong creates a int64 value => NumberLong(7489729384792)
 
 </details>
+

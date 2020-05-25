@@ -194,7 +194,7 @@ Pay attention that you must use double quotation around `status.description`.
 </details>
 
 <details>
-<summary>Section - 3: Schema, Data Types and Relations</summary>
+<summary>Section - 3: Schema Basis</summary>
 
 ![schema](Section-3/1-schema.jpg)
 ![schema](Section-3/2-schemaless-to-sqlworld.jpg)
@@ -206,3 +206,31 @@ in your data structure.
 `db.products.insertOne({name: "Book", details: null})`
 
 </details>
+
+<details>
+<summary>Section - 3: Data Schemas, Data Modelling, Relations</summary>
+
+![data-modelling](Section-3/6-data-modelling.jpg)
+</details>
+
+<details>
+<summary>Section - 3: Data Types, Limits and Statistic</summary>
+
+[good link about how mongodb works inside](https://www.datadoghq.com/blog/monitoring-mongodb-performance-metrics-mmap/)
+
+* Data Types:
+![types](Section-3/4-Value-types.jpg)
+
+* to get statistic from your database you have to use `stats()` command;
+![stats](Section-3/5-stats.jpg)
+To prove that it stores a number instead of float you can use `typeof db.numbers.findOne().a` command.
+
+* MongoDB has a couple of hard limits - most importantly, a single document in a collection (including all embedded documents it might have) must be <= 16mb. Additionally, you may only have 100 levels of embedded documents.
+![additional-info](https://docs.mongodb.com/manual/reference/bson-types/)
+
+1. NumberDecimal creates a high-precision double value => NumberDecimal("12.99")
+2. NumberInt creates a int32 value => NumberInt(55)
+3. NumberLong creates a int64 value => NumberLong(7489729384792)
+
+</details>
+

@@ -226,7 +226,7 @@ in your data structure.
 To prove that it stores a number instead of float you can use `typeof db.numbers.findOne().a` command.
 
 * MongoDB has a couple of hard limits - most importantly, a single document in a collection (including all embedded documents it might have) must be <= 16mb. Additionally, you may only have 100 levels of embedded documents.
-![additional-info](https://docs.mongodb.com/manual/reference/bson-types/)
+[additional-info](https://docs.mongodb.com/manual/reference/bson-types/)
 
 1. NumberDecimal creates a high-precision double value => NumberDecimal("12.99")
 2. NumberInt creates a int32 value => NumberInt(55)

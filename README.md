@@ -208,7 +208,7 @@ in your data structure.
 </details>
 
 <details>
-<summary>Section - 3: Data Schemas, Data Modelling, Relations</summary>
+<summary>Section - 3: Data Schemas, Data Modelling</summary>
 
 ![data-modelling](Section-3/6-data-modelling.jpg)
 </details>
@@ -234,3 +234,9 @@ To prove that it stores a number instead of float you can use `typeof db.numbers
 
 </details>
 
+<details>
+<summary>Section - 3: Relations</summary>
+
+
+
+</details>

@@ -238,7 +238,6 @@ To prove that it stores a number instead of float you can use `typeof db.numbers
 <summary>Section - 3: Relations</summary>
 
 ##One to One Relations
-
 ![relations](Section-3/7-relations-1.jpg)
 ![onetoone](Section-3/one-to-one/8-relations-one-to-one-1.jpg)
 ![onetoone](Section-3/one-to-one/9-relations-one-to-one-2.jpg)
@@ -258,6 +257,26 @@ collections (for load balancing, for example. Or because we are interesting only
 ![onetoone](Section-3/one-to-one/12-relations-one-to-one-reference-5.jpg)
 
 ##One to Many Relations
+![onetomany](Section-3/one-to-many/1-one-to-many-schema-1.jpg)
+* And brief example of ref and embedded approaches:
 
+![onetomany](Section-3/one-to-many/2-one-to-many-approaches.jpg)
+* Additional example:
+
+![onetomany](Section-3/one-to-many/3-additional-example.jpg)
+
+##Many to Many Relations
+![manytomany](Section-3/many-to-many/1-collection-relations.jpg)
+* Sql World approach with 3 tables, one of them stores a joint data:
+
+![manytomany](Section-3/many-to-many/2-sql-world-approach.jpg)
+
+* MongoDB Approach:
+
+![manytomany](Section-3/many-to-many/3-mongo-db-approach.jpg)
+
+It allows us to use references within one of the data tables.
+Advantages from sql and mongo worlds.
+Also no reason to use fully embedded approach for some reasons (over-fetching, possible not up-to-date data and so on).
 
 </details>

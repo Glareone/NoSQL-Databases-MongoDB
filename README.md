@@ -208,7 +208,7 @@ in your data structure.
 </details>
 
 <details>
-<summary>Section - 3: Data Schemas, Data Modelling, Relations</summary>
+<summary>Section - 3: Data Schemas, Data Modelling</summary>
 
 ![data-modelling](Section-3/6-data-modelling.jpg)
 </details>
@@ -234,3 +234,49 @@ To prove that it stores a number instead of float you can use `typeof db.numbers
 
 </details>
 
+<details>
+<summary>Section - 3: Relations</summary>
+
+##One to One Relations
+![relations](Section-3/7-relations-1.jpg)
+![onetoone](Section-3/one-to-one/8-relations-one-to-one-1.jpg)
+![onetoone](Section-3/one-to-one/9-relations-one-to-one-2.jpg)
+
+* Example with one-to-one relations and call the data using two steps and variable:
+
+![onetoone](Section-3/one-to-one/10-relations-one-to-one-3.jpg)
+
+It's not the best option of storing data. In such case better to store data like embedded data inside patient document.
+In most cases better to use embedded approach. 
+
+* Another one-to-one examples, but using references. You still opt to use different collections: 
+It could be possible useful if you try to analyze your data. And it's very good if your data stores in different
+collections (for load balancing, for example. Or because we are interesting only in cars).
+
+![onetoone](Section-3/one-to-one/11-relations-one-to-one-reference-4.jpg)
+![onetoone](Section-3/one-to-one/12-relations-one-to-one-reference-5.jpg)
+
+##One to Many Relations
+![onetomany](Section-3/one-to-many/1-one-to-many-schema-1.jpg)
+* And brief example of ref and embedded approaches:
+
+![onetomany](Section-3/one-to-many/2-one-to-many-approaches.jpg)
+* Additional example:
+
+![onetomany](Section-3/one-to-many/3-additional-example.jpg)
+
+##Many to Many Relations
+![manytomany](Section-3/many-to-many/1-collection-relations.jpg)
+* Sql World approach with 3 tables, one of them stores a joint data:
+
+![manytomany](Section-3/many-to-many/2-sql-world-approach.jpg)
+
+* MongoDB Approach:
+
+![manytomany](Section-3/many-to-many/3-mongo-db-approach.jpg)
+
+It allows us to use references within one of the data tables.
+Advantages from sql and mongo worlds.
+Also no reason to use fully embedded approach for some reasons (over-fetching, possible not up-to-date data and so on).
+
+</details>

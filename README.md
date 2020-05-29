@@ -237,6 +237,9 @@ To prove that it stores a number instead of float you can use `typeof db.numbers
 <details>
 <summary>Section - 3: Relations</summary>
 
-
+![relations](Section-3/7-relations-1.jpg)
+![onetoone](Section-3/8-relations-one-to-one-1.jpg)
+![onetoone](Section-3/9-relations-one-to-one-2.jpg)
+![onetoone](Section-3/10-relations-one-to-one-3.jpg)
 
 </details>

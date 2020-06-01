@@ -279,4 +279,24 @@ It allows us to use references within one of the data tables.
 Advantages from sql and mongo worlds.
 Also no reason to use fully embedded approach for some reasons (over-fetching, possible not up-to-date data and so on).
 
+* Summary:
+![summary](Section-3/many-to-many/4-summary.jpg)
+
+## Merging And Joining with $lookup()
+![aggregate](Section-3/8-merge-aggregate-lookup.jpg)
+* Initial doc is:
+
+![aggregate](Section-3/9-merge-aggregate-lookup2.jpg)
+* And the result of aggregate + lookup operator:
+
+![aggregate](Section-3/10-merge-aggregate-lookup3.jpg)
+
+</details>
+
+<details>
+<summary>Section - 3: Schema Validation</summary>
+
+![validation](Section-3/validation/1-validation-schema.jpg)
+![validation](Section-3/validation/2-levels-and-actions.jpg)
+
 </details>

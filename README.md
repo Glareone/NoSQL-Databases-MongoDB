@@ -284,5 +284,11 @@ Also no reason to use fully embedded approach for some reasons (over-fetching, p
 
 ## Merging And Joining with $lookup()
 ![aggregate](Section-3/8-merge-aggregate-lookup.jpg)
+* Initial doc is:
+
+![aggregate](Section-3/9-merge-aggregate-lookup2.jpg)
+* And the result of aggregate + lookup operator:
+
+![aggregate](Section-3/10-merge-aggregate-lookup3.jpg)
 
 </details>

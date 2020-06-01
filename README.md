@@ -292,3 +292,11 @@ Also no reason to use fully embedded approach for some reasons (over-fetching, p
 ![aggregate](Section-3/10-merge-aggregate-lookup3.jpg)
 
 </details>
+
+<details>
+<summary>Section - 3: Schema Validation</summary>
+
+![validation](Section-3/validation/1-validation-schema.jpg)
+![validation](Section-3/validation/2-levels-and-actions.jpg)
+
+</details>

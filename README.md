@@ -300,3 +300,15 @@ Also no reason to use fully embedded approach for some reasons (over-fetching, p
 ![validation](Section-3/validation/2-levels-and-actions.jpg)
 
 </details>
+
+<details>
+<summary>Section 4: MongoDB Settings, Finding Options, Mongo As Background Service, Shell</summary>
+
+</details>
+
+<details>
+<summary>Section 5: Using the MongoDB Compass to Explore Data Visually</summary>
+
+</details>
+
+

@@ -299,4 +299,66 @@ Also no reason to use fully embedded approach for some reasons (over-fetching, p
 ![validation](Section-3/validation/1-validation-schema.jpg)
 ![validation](Section-3/validation/2-levels-and-actions.jpg)
 
+* To declare validation for new collection you have to use explicit collection creation using `createCollection` method.
+first  parameter is a new collection name.  
+second parameter is its structure: validator + $jsonSchema = validate the schema.
+1. Right now $jsonSchema is strongly recommended approach.
+2. bsonType: "object" - every coming element should be object-like.
+3. required: [] - array of required fields.
+4. description - error message.
+5. items - you can define nested elements validation.
+6. validationAction: 'warn' - only warns you about errors in validation, but not blocks you to send a new document.
+<pre>
+db.createCollection("newNameOfCollection", {
+validator: {
+    $jsonSchema: {bsonType: "object", required: ["title", "text", "creator", "comments"], 
+    properties: {
+     title: { bsonTYpe: "string", description: "must be a string and is required" },
+     text: { bsonType: "string", description: "must be a string and is required" },
+     creator: { bsonTYpe: "objectId", description: "must be an object and is required" },
+     comments: { 
+        bsonTYpe: "array",
+        description: "must be an array!"
+        items: { 
+            bsonType: "object",
+            required: ["text", "authors"] 
+            properties: {
+                 text: {
+                     bsonType: "string",
+                     description: "text must be a string!!"
+                 },
+                 author: {
+                     bsonType: "objectId",
+                     description: "author must be an objectId"
+                 }
+               }
+            }
+        }
+    }
+}})
+</pre>
+
+* To add\modify validation to already existed collection you have to:
+<pre>
+db.runCommand({
+    collMod: "posts",
+    validator: { ...YOUR_VALIDATION_STRUCTURE_AS WE DID BEFORE }
+    validationAction: 'warn'
+    })
+</pre>
+
+this code will succeed. You could see a warning in the log file.(next lecture).
+
 </details>
+
+<details>
+<summary>Section 4: MongoDB Settings, Finding Options, Mongo As Background Service, Shell</summary>
+
+</details>
+
+<details>
+<summary>Section 5: Using the MongoDB Compass to Explore Data Visually</summary>
+
+</details>
+
+

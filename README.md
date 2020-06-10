@@ -299,6 +299,20 @@ Also no reason to use fully embedded approach for some reasons (over-fetching, p
 ![validation](Section-3/validation/1-validation-schema.jpg)
 ![validation](Section-3/validation/2-levels-and-actions.jpg)
 
+to add validation on collection you have to use explicit collection creation using `createCollection` method.
+first  parameter is a new collection name.  
+second parameter is its structure: validator + $jsonSchema = validate the schema.
+1. Right now $jsonSchema is strongly recommended approach.
+2. bsonType: "object" - every coming element should be object-like.
+3. required: [] - array of required fields.
+`db.createCollection("newNameOfCollection", {validator: {
+    $jsonSchema: {bsonType: "object", required: ["title", "text", "creator", "comments"], 
+    properties: {
+     title: { bsonTYpe: "string"}, description: "must be a string and is required"},
+     text: {bsonType: "string", description: "must be a string and is required"},
+     creator: {bsonTYpe: "objectId", description: "must be an object and is required"}   
+    }}})`
+
 </details>
 
 <details>

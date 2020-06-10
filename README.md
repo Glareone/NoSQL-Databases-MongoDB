@@ -352,7 +352,20 @@ this code will succeed. You could see a warning in the log file.(next lecture).
 </details>
 
 <details>
-<summary>Section 4: MongoDB Settings, Finding Options, Mongo As Background Service, Shell</summary>
+<summary>Section 4: MongoDB Settings (As Process and Service), Configuring DB, Log Path</summary>
+
+`--directoryperdb` - each db will be stored in a separate directory (under defined by --dbpath)
+ Instead of collection of files - collection of nested folders.
+
+* LINUX: 
+`--fork` - fork process. Works only for Linux. 
+[mongodb start vs mongod --fork](https://stackoverflow.com/questions/21329618/whats-the-difference-between-service-mongodb-start-and-mongod/48459859)
+to kill MongoDB service process: `use admin` to switch to admin database. And `db.shutdownServer()`;
+
+* Windows:
+To run background MongoDB as background service: `net start MongoDB`.  
+This command provides you ability to run Mongo as background service.
+to kill MongoDB service process: `net stop MongoDB`.
 
 </details>
 

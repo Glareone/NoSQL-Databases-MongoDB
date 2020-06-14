@@ -392,6 +392,10 @@ to use help just type help:
 <details>
 <summary>Section 5: Using the MongoDB Compass to Explore Data Visually</summary>
 
+The MongoDB Compass Docs:   
+[https://docs.mongodb.com/compass/master/install/](https://docs.mongodb.com/compass/master/install/)  
+Full free version of CompassDB is available free for community.
+
 </details>
 
 

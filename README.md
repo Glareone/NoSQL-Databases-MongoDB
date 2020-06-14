@@ -369,7 +369,23 @@ To run background MongoDB as background service: `net start MongoDB`.
 This command provides you ability to run Mongo as background service.
 to kill MongoDB service process: `net stop MongoDB`.
 
-### Save your configurations into configuration file
+### Save your configurations into configuration file and use it
+[configuration file example](Section-4/mongod-configuration-example.cfg)  
+To use config file with mongod:
+`mongod --config C:/mongod-configuration-example.cfg`
+or
+`mongod --f C:/mongod-configuration-example.cfg`
+
+It allows you to make a snapshot or blueprint of your mongod configurations.  
+Another useful information could be found at mongodb documentation.
+
+### Help
+to use help just type help:  
+`help admin` - administrative help  
+`help connect` - connecting to a db help  
+`help keys` - key shortcut
+`help misc` - misc things to know
+`help mr` - mapreduce.
 
 </details>
 

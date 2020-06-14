@@ -376,6 +376,9 @@ To use config file with mongod:
 or
 `mongod --f C:/mongod-configuration-example.cfg`
 
+It allows you to make a snapshot or blueprint of your mongod configurations.  
+Another useful information could be found at mongodb documentation.
+
 </details>
 
 <details>

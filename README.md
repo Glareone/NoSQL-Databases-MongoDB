@@ -370,6 +370,7 @@ This command provides you ability to run Mongo as background service.
 to kill MongoDB service process: `net stop MongoDB`.
 
 ### Save your configurations into configuration file
+[configuration file example](Section-4/mongod-configuration-example.cfg)
 
 </details>
 

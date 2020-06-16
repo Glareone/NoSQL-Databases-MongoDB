@@ -453,6 +453,17 @@ in milliseconds.
 * Journal parameter (undefined or false is a default parameter):
 ![journal](Section-6/8-journal.jpg)
 
+### Atomicity
+![atomic](Section-6/9-atomic.jpg)
+
+# Importing Data
+to import data from json file you have to use mongoimport. This command is available globally (not from mongo terminal mode).
+`-d` -database
+`-c` -collection name (could be implicitly created)
+`--jsonArray` - let your command to know that you send multiple objects, not only one
+`--drop` - drop collection before adding (if the collection exist and not empty)
+![import](Section-6/10-import-tool.jpg)
+
 </details>
 
 

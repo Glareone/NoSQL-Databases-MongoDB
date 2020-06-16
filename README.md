@@ -409,6 +409,31 @@ Additional features:
 Available methods:
 ![methods](Section-6/1-available-methods.jpg)
 
+### Insert
+* insert method also works, but not recommended.
+
+* For example after using `db.persons.insert({name: "Phil", age: 25})` you do now await that this new person has an Id, but it has.  
+Unlike the insertOne method insert does not show you its new "_id". It could be a real disadvantage, because in real create
+operations you want to get an Id of just created object and then - immediately use it in your app (It's an extremely helpful in most cases).
+
+The same story vs insertMany. Its output is not very helpful at all:
+![insertmany](Section-6/2-insert.jpg)
+
+### InsertMany
+If you use insertMany and send elements with non-unique declared "_id" field - it will raise an error, 
+but all elements until <b>first</b> error will be successfully added.  
+ 
+* For example, this one will fail after trying to add "cooking" again:
+![insertmany](Section-6/3-insert-many.jpg)
+![insertmany](Section-6/4-insert-many.jpg)
+* It does not rollback elements which succeeded in inserting.
+
+* To change this behavior you have to use second argument in insertMany method, <b>ordered</b>:  
+ordered option will specify how your insert works. If you set it to `ordered: false` all your elements except failed will be inserted.  
+In other words, it will continue inserting after fail.
+![insertmany-ordered-false](Section-6/5-insertmany-ordered-false.jpg)
+
+* Tip: To Rollback your insert entirely you have to use transactions from transaction module.
 
 </details>
 

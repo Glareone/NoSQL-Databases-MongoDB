@@ -403,4 +403,13 @@ Additional features:
 
 </details>
 
+<details>
+<summary>Section 6: CREATE operation, importing documents, additional information</summary>
+
+Available methods:
+![methods](Section-6/1-available-methods.jpg)
+
+
+</details>
+
 

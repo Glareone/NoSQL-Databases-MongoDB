@@ -403,4 +403,67 @@ Additional features:
 
 </details>
 
+<details>
+<summary>Section 6: CREATE operation, importing documents, additional information</summary>
+
+Available methods:
+![methods](Section-6/1-available-methods.jpg)
+
+### Insert
+* insert method also works, but not recommended.
+
+* For example after using `db.persons.insert({name: "Phil", age: 25})` you do now await that this new person has an Id, but it has.  
+Unlike the insertOne method insert does not show you its new "_id". It could be a real disadvantage, because in real create
+operations you want to get an Id of just created object and then - immediately use it in your app (It's an extremely helpful in most cases).
+
+The same story vs insertMany. Its output is not very helpful at all:
+![insertmany](Section-6/2-insert.jpg)
+
+### InsertMany
+If you use insertMany and send elements with non-unique declared "_id" field - it will raise an error, 
+but all elements until <b>first</b> error will be successfully added.  
+ 
+* For example, this one will fail after trying to add "cooking" again:
+![insertmany](Section-6/3-insert-many.jpg)
+![insertmany](Section-6/4-insert-many.jpg)
+* It does not rollback elements which succeeded in inserting.
+
+* To change this behavior you have to use second argument in insertMany method, <b>ordered</b>:  
+ordered option will specify how your insert works. If you set it to `ordered: false` all your elements except failed will be inserted.  
+In other words, it will continue inserting after fail.
+![insertmany-ordered-false](Section-6/5-insertmany-ordered-false.jpg)
+
+* Tip: To Rollback your insert entirely you have to use transactions from transaction module.
+
+### WriteConcern
+![writeconcern](Section-6/6-w-j-parameters.jpg)
+
+* What w:0 allows you - it allows you to get immediate response without waiting real data adding to any instance.
+The response will be "acknowledge: false" - which means "we are not sure does your request reach the server or not".  
+It is super fast, but obviously it does not let you know anything about operations.
+![writeconcern](Section-6/7-acknowledge-false.jpg)
+
+* Why storage engine does not store document on the disk first?
+because this operation could be quite heavy (take care about indexes, for example), better to store the info into the 
+memory first and after that - set it to the disk using "journal ("TODO")".
+
+* Timeout option allows you control create operation time in situations with bad network connection, for example.
+in milliseconds.
+
+* Journal parameter (undefined or false is a default parameter):
+![journal](Section-6/8-journal.jpg)
+
+### Atomicity
+![atomic](Section-6/9-atomic.jpg)
+
+# Importing Data
+to import data from json file you have to use mongoimport. This command is available globally (not from mongo terminal mode).
+`-d` -database
+`-c` -collection name (could be implicitly created)
+`--jsonArray` - let your command to know that you send multiple objects, not only one
+`--drop` - drop collection before adding (if the collection exist and not empty)
+![import](Section-6/10-import-tool.jpg)
+
+</details>
+
 

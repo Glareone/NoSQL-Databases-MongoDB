@@ -435,6 +435,24 @@ In other words, it will continue inserting after fail.
 
 * Tip: To Rollback your insert entirely you have to use transactions from transaction module.
 
+### WriteConcern
+![writeconcern](Section-6/6-w-j-parameters.jpg)
+
+* What w:0 allows you - it allows you to get immediate response without waiting real data adding to any instance.
+The response will be "acknowledge: false" - which means "we are not sure does your request reach the server or not".  
+It is super fast, but obviously it does not let you know anything about operations.
+![writeconcern](Section-6/7-acknowledge-false.jpg)
+
+* Why storage engine does not store document on the disk first?
+because this operation could be quite heavy (take care about indexes, for example), better to store the info into the 
+memory first and after that - set it to the disk using "journal ("TODO")".
+
+* Timeout option allows you control create operation time in situations with bad network connection, for example.
+in milliseconds.
+
+* Journal parameter (undefined or false is a default parameter):
+![journal](Section-6/8-journal.jpg)
+
 </details>
 
 

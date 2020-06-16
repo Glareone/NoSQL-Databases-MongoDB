@@ -396,6 +396,11 @@ The MongoDB Compass Docs:
 [https://docs.mongodb.com/compass/master/install/](https://docs.mongodb.com/compass/master/install/)  
 Full free version of CompassDB is available free for community.
 
+You can use compass to create databases, collections and documents.
+![example](Section-5/1-compass-collection-creation-insert-document.jpg)
+Additional features:
+![features in compass](Section-5/2-tabs.jpg)
+
 </details>
 
 

@@ -476,8 +476,23 @@ to import data from json file you have to use mongoimport. This command is avail
 ![operators](Section-7/2-operator-examples.jpg)
 
 Comparision Operators:
+1. Examples how to work with top-level properties:
 `db.movies.find({runtime: {$eq: 60}})` == `db.movies.find({runtime: 60})`
 It's also possible to use not equal operator using `$ne`.
+Others could be found in the official documentation.
+
+2. How to work with non-top level properties (because we possibly have lots of embedded fields):
+`db.movies.find({"rating.average": {$lt: 60}})` - average is lower than 60.
+
+**Hint 1**: Is you have some genres for your movies in the array, and you try to find "Drama" movies with
+`db.movies.find({genres: "Drama"}).pretty()` it also returns you movies with array of genres where "Drama" is included in.
+![array-of-elements-and-filtering](Section-7/3-genres-array-and-filter-operator.jpg)
+
+If you want to find exact films with only "Drama" in array you have to use next operator:
+`db.movies.find({genres: ["Drama"]}).pretty()` - will return you only Drama in an array.
+
+**Hint 2**: Pay attention on capital "D" in "Drama" equality. If you try to find any movie with "drama" genre - it will not return you anything.
+Case sensitive searching.
 
 </details>
 

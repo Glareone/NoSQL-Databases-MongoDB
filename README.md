@@ -542,5 +542,9 @@ To avoid that let's do next:
 `db.users.find({phone: {$type: "double"}}).pretty()`
 `db.users.find({phone: {$type: ["double", "string"]}}).pretty()` - works as well if you would like to check on multiple types.
 
+* $regex allow you to search with text (But be aware it has no super performance, especially with big texts, better to use indexes):  
+`db.movies.find({summary: {$regex: /musical/}})` - for example it will look for "non-full equality".
+But again, it's not the best way of doing that.
+
 </details>
 

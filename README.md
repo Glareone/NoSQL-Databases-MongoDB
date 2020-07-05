@@ -475,7 +475,7 @@ to import data from json file you have to use mongoimport. This command is avail
 ![operators](Section-7/1-operators.jpg)
 ![operators](Section-7/2-operator-examples.jpg)
 
-Comparision Operators:
+#### Comparision Operators:
 1. Examples how to work with top-level properties:
 `db.movies.find({runtime: {$eq: 60}})` == `db.movies.find({runtime: 60})`
 It's also possible to use not equal operator using `$ne`.
@@ -493,6 +493,26 @@ If you want to find exact films with only "Drama" in array you have to use next 
 
 **Hint 2**: Pay attention on capital "D" in "Drama" equality. If you try to find any movie with "drama" genre - it will not return you anything.
 Case sensitive searching.
+
+#### Logical Operators (nor, or, not, and):
+1. OR (which means composition of 2 operators):  
+`db.movies.find({"rating.average": {$or: [{"rating.average": {$lt: 5}}, {"rating.average": {$gt: 9.3}}]}})` - returns all movies where average rating
+is lower than 5 or greater than 9.3.
+
+1.1. NOR very similar with OR:
+`db.movies.find({"rating.average": {$nor: [{"rating.average": {$lt: 5}}, {"rating.average": {$gt: 9.3}}]}})` - returns you all movies
+Where all conditions do not work (not higher than 9.3 and not lower than 5). Simply say it's the inverse of our previous check.
+
+2. AND:
+`db.movies.find({"rating.average": {$and: [{genres: "Drama"}, {"rating.average": {$gt: 9.3}}]}})`
+
+2.1. The alternative of that is:
+`db.movies.find({"rating.average": {$gt: 9}, genres: "Drama"})` - it works the same because by default MongoDB has the concatenation mechanism.
+But what the point of having 2 different ways to get the same results?  
+**Here the answer**:  
+`db.movies.find({genres: "Horror", genres: "Drama"})` - works in command prompt, but prohibited in Javascript because you can't declare 2 object keys
+with the same name.  
+`db.movies.find({$and: [{genres: "Horror"}, {genres: "Drama"}]})` - but this one will work like a charm.
 
 </details>
 

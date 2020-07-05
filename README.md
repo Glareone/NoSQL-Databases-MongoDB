@@ -466,4 +466,18 @@ to import data from json file you have to use mongoimport. This command is avail
 
 </details>
 
+<details>
+<summary>Section 7: READ Operations</summary>
+
+## Structure:
+![method-filter-operator](Section-7/0-method-filter-operator.jpg)
+### Operators:
+![operators](Section-7/1-operators.jpg)
+![operators](Section-7/2-operator-examples.jpg)
+
+Comparision Operators:
+`db.movies.find({runtime: {$eq: 60}})` == `db.movies.find({runtime: 60})`
+It's also possible to use not equal operator using `$ne`.
+
+</details>
 

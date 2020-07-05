@@ -514,5 +514,19 @@ But what the point of having 2 different ways to get the same results?
 with the same name.  
 `db.movies.find({$and: [{genres: "Horror"}, {genres: "Drama"}]})` - but this one will work like a charm.
 
+**But pay attention.**  
+`db.movies.find({genres: "Horror", genres: "Drama"})` option will return you results with movies which have
+single genres "Drama" or "Horror". Why is that? Because it replaces previously declared "genres" with new value "Drama" (which was declared the last):  
+How to check that?  
+`db.movies.find({genres: "Horror", genres: "Drama"}).count()` - 23 elements.  
+`db.movies.find({genres: "Drama"}).count()` - 23 elements.  
+ 
+Conclusion: if you need to use and with one field - you have to use `$and` syntax.
+
+3. NOT:
+Inverts the result of your filter:  
+`db.movies.find({"runtime": {$not: {$eq: 60}})` - not equal to 60.
+`db.movies.find({"runtime": {$ne: 60}})` - not equal to 60 too.
+
 </details>
 

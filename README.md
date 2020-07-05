@@ -466,4 +466,85 @@ to import data from json file you have to use mongoimport. This command is avail
 
 </details>
 
+<details>
+<summary>Section 7: READ Operations</summary>
+
+## Structure:
+![method-filter-operator](Section-7/0-method-filter-operator.jpg)
+### Operators:
+![operators](Section-7/1-operators.jpg)
+![operators](Section-7/2-operator-examples.jpg)
+
+#### Comparision Operators:
+1. Examples how to work with top-level properties:
+`db.movies.find({runtime: {$eq: 60}})` == `db.movies.find({runtime: 60})`
+It's also possible to use not equal operator using `$ne`.
+Others could be found in the official documentation.
+
+2. How to work with non-top level properties (because we possibly have lots of embedded fields):
+`db.movies.find({"rating.average": {$lt: 60}})` - average is lower than 60.
+
+**Hint 1**: Is you have some genres for your movies in the array, and you try to find "Drama" movies with
+`db.movies.find({genres: "Drama"}).pretty()` it also returns you movies with array of genres where "Drama" is included in.
+![array-of-elements-and-filtering](Section-7/3-genres-array-and-filter-operator.jpg)
+
+If you want to find exact films with only "Drama" in array you have to use next operator:
+`db.movies.find({genres: ["Drama"]}).pretty()` - will return you only Drama in an array.
+
+**Hint 2**: Pay attention on capital "D" in "Drama" equality. If you try to find any movie with "drama" genre - it will not return you anything.
+Case sensitive searching.
+
+#### Logical Operators (nor, or, not, and):
+* OR (which means composition of 2 operators):  
+`db.movies.find({"rating.average": {$or: [{"rating.average": {$lt: 5}}, {"rating.average": {$gt: 9.3}}]}})` - returns all movies where average rating
+is lower than 5 or greater than 9.3.
+
+* NOR very similar with OR:
+`db.movies.find({"rating.average": {$nor: [{"rating.average": {$lt: 5}}, {"rating.average": {$gt: 9.3}}]}})` - returns you all movies
+Where all conditions do not work (not higher than 9.3 and not lower than 5). Simply say it's the inverse of our previous check.
+
+* AND:
+`db.movies.find({"rating.average": {$and: [{genres: "Drama"}, {"rating.average": {$gt: 9.3}}]}})`
+
+The alternative of that is:
+`db.movies.find({"rating.average": {$gt: 9}, genres: "Drama"})` - it works the same because by default MongoDB has the concatenation mechanism.  
+But what the point of having 2 different ways to get the same results?  
+**Here the answer**:  
+`db.movies.find({genres: "Horror", genres: "Drama"})` - works in command prompt, but prohibited in Javascript because you can't declare 2 object keys
+with the same name.  
+`db.movies.find({$and: [{genres: "Horror"}, {genres: "Drama"}]})` - but this one will work like a charm.  
+
+**But pay attention.**  
+`db.movies.find({genres: "Horror", genres: "Drama"})` option will return you results with movies which have
+single genres "Drama" or "Horror". Why is that? Because it replaces previously declared "genres" with new value "Drama" (which was declared the last):  
+How to check that?  
+`db.movies.find({genres: "Horror", genres: "Drama"}).count()` - 23 elements.  
+`db.movies.find({genres: "Drama"}).count()` - 23 elements.  
+ 
+**Conclusion**: if you need to use and with one field - you have to use `$and` syntax.
+
+* NOT:
+Inverts the result of your filter:  
+`db.movies.find({"runtime": {$not: {$eq: 60}})` - not equal to 60.
+`db.movies.find({"runtime": {$ne: 60}})` - not equal to 60 too.
+
+#### Element Operators:
+Allows you to work with the data of different types - for example when phone number has integer type and string type.
+Also, it allows you to check does this property exist and so on:
+
+* $exist:
+`db.users.find({age: {$exists: true}}).pretty()` - shows you which documents have declared age field.  
+Pay attention it will return you documents with defined age with "null" value as well.  
+To avoid that let's do next:
+`db.users.find({age: {$exists: true, $ne: null}}).pretty()` - will return you documents with defined age which is not null.
+
+* $type:
+`db.users.find({phone: {$type: "double"}}).pretty()`
+`db.users.find({phone: {$type: ["double", "string"]}}).pretty()` - works as well if you would like to check on multiple types.
+
+* $regex allow you to search with text (But be aware it has no super performance, especially with big texts, better to use indexes):  
+`db.movies.find({summary: {$regex: /musical/}})` - for example it will look for "non-full equality".
+But again, it's not the best way of doing that.
+
+</details>
 

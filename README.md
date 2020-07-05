@@ -495,24 +495,24 @@ If you want to find exact films with only "Drama" in array you have to use next 
 Case sensitive searching.
 
 #### Logical Operators (nor, or, not, and):
-1. OR (which means composition of 2 operators):  
+* OR (which means composition of 2 operators):  
 `db.movies.find({"rating.average": {$or: [{"rating.average": {$lt: 5}}, {"rating.average": {$gt: 9.3}}]}})` - returns all movies where average rating
 is lower than 5 or greater than 9.3.
 
-1.1. NOR very similar with OR:
+* NOR very similar with OR:
 `db.movies.find({"rating.average": {$nor: [{"rating.average": {$lt: 5}}, {"rating.average": {$gt: 9.3}}]}})` - returns you all movies
 Where all conditions do not work (not higher than 9.3 and not lower than 5). Simply say it's the inverse of our previous check.
 
-2. AND:
+* AND:
 `db.movies.find({"rating.average": {$and: [{genres: "Drama"}, {"rating.average": {$gt: 9.3}}]}})`
 
-2.1. The alternative of that is:
-`db.movies.find({"rating.average": {$gt: 9}, genres: "Drama"})` - it works the same because by default MongoDB has the concatenation mechanism.
+The alternative of that is:
+`db.movies.find({"rating.average": {$gt: 9}, genres: "Drama"})` - it works the same because by default MongoDB has the concatenation mechanism.  
 But what the point of having 2 different ways to get the same results?  
 **Here the answer**:  
 `db.movies.find({genres: "Horror", genres: "Drama"})` - works in command prompt, but prohibited in Javascript because you can't declare 2 object keys
 with the same name.  
-`db.movies.find({$and: [{genres: "Horror"}, {genres: "Drama"}]})` - but this one will work like a charm.
+`db.movies.find({$and: [{genres: "Horror"}, {genres: "Drama"}]})` - but this one will work like a charm.  
 
 **But pay attention.**  
 `db.movies.find({genres: "Horror", genres: "Drama"})` option will return you results with movies which have
@@ -521,12 +521,26 @@ How to check that?
 `db.movies.find({genres: "Horror", genres: "Drama"}).count()` - 23 elements.  
 `db.movies.find({genres: "Drama"}).count()` - 23 elements.  
  
-Conclusion: if you need to use and with one field - you have to use `$and` syntax.
+**Conclusion**: if you need to use and with one field - you have to use `$and` syntax.
 
-3. NOT:
+* NOT:
 Inverts the result of your filter:  
 `db.movies.find({"runtime": {$not: {$eq: 60}})` - not equal to 60.
 `db.movies.find({"runtime": {$ne: 60}})` - not equal to 60 too.
+
+#### Element Operators:
+Allows you to work with the data of different types - for example when phone number has integer type and string type.
+Also, it allows you to check does this property exist and so on:
+
+* $exist:
+`db.users.find({age: {$exists: true}}).pretty()` - shows you which documents have declared age field.  
+Pay attention it will return you documents with defined age with "null" value as well.  
+To avoid that let's do next:
+`db.users.find({age: {$exists: true, $ne: null}}).pretty()` - will return you documents with defined age which is not null.
+
+* $type:
+`db.users.find({phone: {$type: "double"}}).pretty()`
+`db.users.find({phone: {$type: ["double", "string"]}}).pretty()` - works as well if you would like to check on multiple types.
 
 </details>
 

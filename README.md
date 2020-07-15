@@ -544,7 +544,45 @@ To avoid that let's do next:
 
 * $regex allow you to search with text (But be aware it has no super performance, especially with big texts, better to use indexes):  
 `db.movies.find({summary: {$regex: /musical/}})` - for example it will look for "non-full equality".
-But again, it's not the best way of doing that.
+But again, it's not the best way of doing that.  
+Example:
+1. Data:  
+`{
+               "_id" : ObjectId("5f0f2d0c461a206f6b3ab0a8"),
+               "volume" : 100,
+               "target" : 120
+}
+{
+               "_id" : ObjectId("5f0f2d0c461a206f6b3ab0a9"),
+               "volume" : 89,
+               "target" : 80
+}
+{
+               "_id" : ObjectId("5f0f2d0c461a206f6b3ab0aa"),
+               "volume" : 200,
+               "target" : 177
+}`
+
+2. Find all elements where volume is higher than target:
+`db.sales.find({$expr: {$gt: ["$volume", "$target"]} })`  
+* $expr - expression
+* "$volume" and "$target" - name of the fields 
+
+2.1 It also could be more complex. For example find elements where volume is also higher than additional const value + target is higher than some const value:
+`> db.sales.find({$expr: {$gt: [{$cond: {if: {$gte: ["$volume", 190]}, then: {$subtract: ["$volume", 30]}, else: "$volume"}}, "$target" ]}})`
+* $cond is related to expression $expr. Condition `$cond` allows you to describe complex conditions.
+this condition must be `$gt` greater than `"$target"`.
+* $subtract - subtract one value from another
+* if then else condition
+Result:
+`{ "_id" : ObjectId("5f0f2d0c461a206f6b3ab0a9"), "volume" : 89, "target" : 80 }` - because only this documents suits to our condition
+
+if we change our subtract from 30 to 10:
+`> db.sales.find({$expr: {$gt: [{$cond: {if: {$gte: ["$volume", 190]}, then: {$subtract: ["$volume", 10]}, else: "$volume"}}, "$target" ]}})`  
+Result will be:  
+`{ "_id" : ObjectId("5f0f2d0c461a206f6b3ab0a9"), "volume" : 89, "target" : 80 }
+ { "_id" : ObjectId("5f0f2d0c461a206f6b3ab0aa"), "volume" : 200, "target" : 177 }` - two values instead of one in the result set.
+
 
 </details>
 

@@ -532,17 +532,17 @@ Inverts the result of your filter:
 Allows you to work with the data of different types - for example when phone number has integer type and string type.
 Also, it allows you to check does this property exist and so on:
 
-* $exist:
+##### $exist:
 `db.users.find({age: {$exists: true}}).pretty()` - shows you which documents have declared age field.  
 Pay attention it will return you documents with defined age with "null" value as well.  
 To avoid that let's do next:
 `db.users.find({age: {$exists: true, $ne: null}}).pretty()` - will return you documents with defined age which is not null.
 
-* $type:
+###### $type:
 `db.users.find({phone: {$type: "double"}}).pretty()`
 `db.users.find({phone: {$type: ["double", "string"]}}).pretty()` - works as well if you would like to check on multiple types.
 
-* $regex allow you to search with text (But be aware it has no super performance, especially with big texts, better to use indexes):  
+###### $regex allow you to search with text (But be aware it has no super performance, especially with big texts, better to use indexes):  
 `db.movies.find({summary: {$regex: /musical/}})` - for example it will look for "non-full equality".
 But again, it's not the best way of doing that.  
 Example:
@@ -563,6 +563,7 @@ Example:
                "target" : 177
 }`
 
+###### $expr:
 2. Find all elements where volume is higher than target:
 `db.sales.find({$expr: {$gt: ["$volume", "$target"]} })`  
 * $expr - expression
@@ -583,6 +584,49 @@ Result will be:
 `{ "_id" : ObjectId("5f0f2d0c461a206f6b3ab0a9"), "volume" : 89, "target" : 80 }
  { "_id" : ObjectId("5f0f2d0c461a206f6b3ab0aa"), "volume" : 200, "target" : 177 }` - two values instead of one in the result set.
 
+##### Querying Arrays ($size, $all, $elemMatch):
+to find something through complex objects in arrays, for example nested object  
+`hobbies: [{title: "Sports", frequency: 3}, {title: "Cooking", frequency: 2}]`
+Answer:  
+`db.users.find({"hobbies.title": "Sports})` - you can use this operator for nested arrays. Will query all documents which include Sport in hobbies array.
+
+* $size, $all  
+Find all movies with genres action and thriller AND size or genre array should be 2. Will query only movies with exact genres.  
+`db.movies.find({$and: [{genre: {$all: ["action", "thriller"]}}, {genre: {$size: 2}}]}).pretty()`
+
+* $elemMatch  
+Find all users who have hobby "Sports" with frequency 2. Data:  
+`hobbies: [{title: "Sports", frequency: 3}, {title: "Cooking", frequency: 2}]`
+Answer:  
+`db.users.find({$and: [{"hobbies.title": "Sports"}, {"hobbies.frequency": 2}]})` - will not work. It will find all documents with independent values. For example if someone has any hobby with frequency 2 + Sports with frequency 3.  
+Here we basically can use $elemMatch:  
+`db.users.find({"hobbies": {$elemMatch: {title: "Sports", frequency: 2}}})` - will work.  
+**Pay attention on "title" - i use it without writing parent node "hobbies.title" because it returns you the nested document**
+ 
+* Additional example: to find all movies where rating array contains only values between 8 and 10 (using $all and $elemMatch):  
+Data Structure:  
+`{
+         "_id" : ObjectId("5f0f3ddeb1feccd1e8f78a67"),
+         "title" : "Supercharged Teaching",
+         "meta" : {
+                 "rating" : 9.3,
+                 "aired" : 2016,
+                 "runtime" : 60
+         },
+         "visitors" : 370000,
+         "expectedVisitors" : 1000000,
+         "genre" : [
+                 "thriller",
+                 "action"
+         ],
+         "ratings" : [
+                 10,
+                 9,
+                 9
+         ]
+}`  
+Answer:   
+`> db.movies.find({ratings: {$all: [{$elemMatch: {$gt: 8}}, {$elemMatch: {$lt: 10}} ]}}).pretty()`
 
 </details>
 

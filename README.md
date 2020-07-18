@@ -635,6 +635,8 @@ Answer:
 
 ![operators](Section-7/4-Cursors.jpg)
 
+#### Cursors. Base understandings and additional functions.
+
 * `count()` - using count with a cursor you can find out how much documents you can get.
 `db.movies.find().count()`
 BTW, when we make such call - we amek a call to memory, not to data which comes from file. It happens because after his inner command "run"
@@ -657,6 +659,20 @@ if you call dataCursor - it will return you 20 documents again.
 Example:  
 `dataCursor.forEach(doc => {printjson(doc)})`. printjson - method provided by driver which prints your document on the screen.
 **Pay attention. You will no longer able to use "it" to see more. After using forEach with cursor it will return you all remain documents in db (obviously after prev next() calls)**
+
+3. if you make a call to `next()` after `forEach` - it will show you an error because the cursor will be exhausted.  
+You can check it using `hasNext()` function with cursor: `dataCursor.hasNext()`, With hasNext you can safety use `next()`.
+
+#### Cursors. Sorting results.
+You can sort alphabetically, or by number. You have to call it after `find()` and before `pretty()`.
+`db.movies.find().sort({"rating.average": 1}).pretty()`  
+1 - means ascending  
+-1 - descending. Returns doc with the highest average rating first.
+
+You can use several sorting fields:  
+`db.movies.find().sort({"rating.average": 1, runtime: -1}).pretty()` - by average rating, then by runtime.
+
+* Tip: For obvious reasons sort is available only for cursors after find, it is not available after findOne().
 
 
 </details>

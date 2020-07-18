@@ -710,7 +710,11 @@ It looks a bit strange. Let me explain how it works. Technically "Horror" is a f
 ![cursors](Section-7/7-projection-for-arrays-3.jpg)
 You see empty field because "Horror" did not simply include into them.
 
-#### Cursors. $slice.
+##### Projection. $slice for arrays.
+`$slice` allows you to pull specified amount of elements from array.
+`db.movies.find({"genres": "Drama"}, {genres: {$slice: 2}, name: 1}})` - this example will return you series with name, id(added by default) and 2 genres.  
+With slice you can use array form:
+`db.movies.find({"genres": "Drama"}, {genres: {$slice: [1, 2], name: 1}})` - first parameter is amount of elements what you would like to skip. The second one - is the amount of element to pull.
 
 </details>
 

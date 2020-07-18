@@ -687,5 +687,20 @@ This method is also very useful for pagination.
 
 **Pay attention. Orders of the methods matter! It matters when you use directly with a driver. But using with a cursor it doesn't matter, cursor place it in the right order for you under the hood!**
 
+#### Cursors. Projection.
+##### Projection for objects and embedded documents:  
+* Using projection you can control which data returned. What does it mean? It means how we extract the data fields.  
+To do that you have to pass second argument to `find`. First one is responsible for the filter criteria.  
+`db.movies.find({}, {name: 1, genres: 1, runtime: 1, rating: 1, image: 0}).pretty()` -- all fields which are not mentioned here (or if they were mentioned explicitly with 0) - are not included.  
+* There are one exception - _id field. It is included if you don't specify it with 1. You can exclude it  set to 0 explicitly:  
+ `db.movies.find({}, {name: 1, genres: 1, runtime: 1, rating: 1, image: 0, _id: 0}).pretty()`
+* you could also project for embedded documents:  
+ `db.movies.find({}, {"schedule.time": 1}).pretty()` - will return you a schedule embedded document only with mentioned field. Other fields will not be included.
+
+##### Projection for arrays:
+
+
+#### Cursors. $slice.
+
 </details>
 

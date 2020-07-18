@@ -635,5 +635,29 @@ Answer:
 
 ![operators](Section-7/4-Cursors.jpg)
 
+* `count()` - using count with a cursor you can find out how much documents you can get.
+`db.movies.find().count()`
+BTW, when we make such call - we amek a call to memory, not to data which comes from file. It happens because after his inner command "run"
+it place data into memory.
+
+* `find()` - when you make a call with find() from console you can type "it" to get next batch of documents. The MongoDb driver has another command and mechanism to
+make the same.
+
+* `next()` - this method works in console and directly with driver.  
+`db.movies.find().next()`
+
+1. If you call `next()` several times - it will return you the same element? Why? because it executes it from scratch.  
+If you store somewhere your dataCursor and make the `next()` call from it - it will return you next element every time.
+
+Example:  
+`const dataCursor = db.movies.find() dataCursor.next()`
+if you call dataCursor - it will return you 20 documents again.  
+
+2. `forEach` - another operation which could be used with cursor.  
+Example:  
+`dataCursor.forEach(doc => {printjson(doc)})`. printjson - method provided by driver which prints your document on the screen.
+**Pay attention. You will no longer able to use "it" to see more. After using forEach with cursor it will return you all remain documents in db (obviously after prev next() calls)**
+
+
 </details>
 

@@ -630,3 +630,62 @@ Answer:
 
 </details>
 
+<details>
+<summary>Section 7: Cursors behind the scene</summary>
+
+![operators](Section-7/4-Cursors.jpg)
+
+#### Cursors. Base understandings and additional functions.
+
+* `count()` - using count with a cursor you can find out how much documents you can get.
+`db.movies.find().count()`
+BTW, when we make such call - we make a call to memory, not to data which comes from file. It happens because after his inner command "run"
+it place data into memory.
+
+* `find()` - when you make a call with find() from console you can type "it" to get next batch of documents. The MongoDb driver has another command and mechanism to
+make the same.
+
+* `next()` - this method works in console and directly with mongoDb driver.  
+`db.movies.find().next()`
+
+1. If you call `next()` several times - it will return you the same element? Why? because it executes it from scratch.  
+If you store somewhere your dataCursor and make the `next()` call from it - it will return you next element every time.
+
+Example:  
+`const dataCursor = db.movies.find() dataCursor.next()`
+if you call dataCursor - it will return you 20 documents again.  
+
+2. `forEach` - another operation which could be used with cursor.  
+Example:  
+`dataCursor.forEach(doc => {printjson(doc)})`. printjson - method provided by driver which prints your document on the screen.
+**Pay attention. You will no longer able to use "it" to see more. After using forEach with the cursor it will return you all remain documents in db (obviously after prev next() calls)**
+
+3. if you make a call to `next()` after `forEach` - it will show you an error because the cursor will be exhausted.  
+You can check it using `hasNext()` function with cursor: `dataCursor.hasNext()`, With hasNext you can safety use `next()`.
+
+#### Cursors. Sorting results.
+You can sort alphabetically, or by number. You have to call it after `find()` and before `pretty()`.
+`db.movies.find().sort({"rating.average": 1}).pretty()`  
+1 - means ascending  
+-1 - descending. Returns doc with the highest average rating first.
+
+You can use several sorting fields:  
+`db.movies.find().sort({"rating.average": 1, runtime: -1}).pretty()` - by average rating, then by runtime.
+
+* Tip: For obvious reasons sort is available only for cursors after find, it is not available after findOne().
+
+#### Cursors. Skipping and Limiting.
+* `skip()`. You can use skipping for pagination on your website, for example.  
+`db.movies.find().sort({"rating.average": 1, runtime: -1}).skip(10).pretty()` -- skip 10 documents.
+We are also able to skip much higher than 20 (default cursor documents amount). It is possible to `skip(100)` for example.
+
+* `limit()`. Limit allows you to limit amount of documents retrieving by the cursor.  
+Interesting detail.
+`db.movies.find().sort({"rating.average": 1, runtime: -1}).skip(10).limit(10).count()` - returns you total amount of documents in the collection.  
+But if you try to see results by `db.movies.find().sort({"rating.average": 1, runtime: -1}).skip(10).limit(10).pretty()` - it will return you only 10 elements.
+This method is also very useful for pagination.
+
+**Pay attention. Orders of the methods matter! It matters when you use directly with a driver. But using with a cursor it doesn't matter, cursor place it in the right order for you under the hood!**
+
+</details>
+

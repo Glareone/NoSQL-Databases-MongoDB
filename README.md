@@ -633,7 +633,7 @@ Answer:
 <details>
 <summary>Section 7: Cursors behind the scene</summary>
 
-![operators](Section-7/4-Cursors.jpg)
+![cursors](Section-7/4-Cursors.jpg)
 
 #### Cursors. Base understandings and additional functions.
 
@@ -699,6 +699,16 @@ To do that you have to pass second argument to `find`. First one is responsible 
 
 ##### Projection for arrays:
 
+1. `db.movies.find({"genres": "Drama"}, {"genres.$": 1})`  - This query means that we filtering every movie by genres which include "Drama" (genres is an array). But after that we tell mongo to fetch only first genre from the array.  
+![cursors](Section-7/5-projection-for-arrays.jpg)
+Another example: 
+![cursors](Section-7/6-projection-for-arrays-2.jpg)
+It looks a bit strange. Let me explain how it works. Technically "Horror" is a first matching element. Drama is lower. That's why after projection we see only him.
+
+2. `$elemMatch`. Sometimes your want to pull some items which are not you queried for. In such situation you can use $elemmatch. It also available for you in projection.  
+`db.movies.find({"genres": "Drama"}, {genres: {$elemMatch: {$eq: "Horror"}}})` 
+![cursors](Section-7/7-projection-for-arrays-3.jpg)
+You see empty field because "Horror" did not simply include into them.
 
 #### Cursors. $slice.
 

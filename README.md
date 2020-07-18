@@ -630,3 +630,10 @@ Answer:
 
 </details>
 
+<details>
+<summary>Section 7: Cursors behind the scene</summary>
+
+![operators](Section-7/4-Cursors.jpg)
+
+</details>
+

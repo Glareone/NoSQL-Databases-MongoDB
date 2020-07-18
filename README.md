@@ -633,7 +633,7 @@ Answer:
 <details>
 <summary>Section 7: Cursors behind the scene</summary>
 
-![operators](Section-7/4-Cursors.jpg)
+![cursors](Section-7/4-Cursors.jpg)
 
 #### Cursors. Base understandings and additional functions.
 
@@ -686,6 +686,35 @@ But if you try to see results by `db.movies.find().sort({"rating.average": 1, ru
 This method is also very useful for pagination.
 
 **Pay attention. Orders of the methods matter! It matters when you use directly with a driver. But using with a cursor it doesn't matter, cursor place it in the right order for you under the hood!**
+
+#### Cursors. Projection.
+##### Projection for objects and embedded documents:  
+* Using projection you can control which data returned. What does it mean? It means how we extract the data fields.  
+To do that you have to pass second argument to `find`. First one is responsible for the filter criteria.  
+`db.movies.find({}, {name: 1, genres: 1, runtime: 1, rating: 1, image: 0}).pretty()` -- all fields which are not mentioned here (or if they were mentioned explicitly with 0) - are not included.  
+* There are one exception - _id field. It is included if you don't specify it with 1. You can exclude it  set to 0 explicitly:  
+ `db.movies.find({}, {name: 1, genres: 1, runtime: 1, rating: 1, image: 0, _id: 0}).pretty()`
+* you could also project for embedded documents:  
+ `db.movies.find({}, {"schedule.time": 1}).pretty()` - will return you a schedule embedded document only with mentioned field. Other fields will not be included.
+
+##### Projection for arrays:
+
+1. `db.movies.find({"genres": "Drama"}, {"genres.$": 1})`  - This query means that we filtering every movie by genres which include "Drama" (genres is an array). But after that we tell mongo to fetch only first genre from the array.  
+![cursors](Section-7/5-projection-for-arrays.jpg)
+Another example: 
+![cursors](Section-7/6-projection-for-arrays-2.jpg)
+It looks a bit strange. Let me explain how it works. Technically "Horror" is a first matching element. Drama is lower. That's why after projection we see only him.
+
+2. `$elemMatch`. Sometimes your want to pull some items which are not you queried for. In such situation you can use $elemmatch. It also available for you in projection.  
+`db.movies.find({"genres": "Drama"}, {genres: {$elemMatch: {$eq: "Horror"}}})` 
+![cursors](Section-7/7-projection-for-arrays-3.jpg)
+You see empty field because "Horror" did not simply include into them.
+
+##### Projection. $slice for arrays.
+`$slice` allows you to pull specified amount of elements from array.
+`db.movies.find({"genres": "Drama"}, {genres: {$slice: 2}, name: 1}})` - this example will return you series with name, id(added by default) and 2 genres.  
+With slice you can use array form:
+`db.movies.find({"genres": "Drama"}, {genres: {$slice: [1, 2], name: 1}})` - first parameter is amount of elements what you would like to skip. The second one - is the amount of element to pull.
 
 </details>
 

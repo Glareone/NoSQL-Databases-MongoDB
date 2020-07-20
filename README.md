@@ -39,7 +39,7 @@ Add here a path to your mongoDB.
 [useful link](https://dangphongvanthanh.wordpress.com/2017/06/12/add-mongos-bin-folder-to-the-path-environment-variable/)
 
 <b>BTW</b>, to continue working with course you have to stop MongoDB service and start db manually
-using "mongo" command from console. Without it "mongo" command will open mongo service instead of real db.
+using "mongo" command from a console. Without it "mongo" command will open mongo service instead of real db.
 
 to stop service - open CMD as admin and `net stop Mongo`
 
@@ -66,7 +66,7 @@ in db which we connected to and insert a document inside it.
 Pay attention on non-existing quotation mark in "keys" - you can use key naming without quotations, they will be added
 under the hood.  
 
-Here is a console output. InsertedId - generated uniqueId for this insert, acknowledged - verified that this data was inserted.
+Here is a console output. InsertedId - generated uniqueId for this insert, acknowledged - it confirms that this data is inserted.
 ![console output](Section-1/7-console-output-after-insert.jpg)
 
 * `db.products.find()` - retrieves you all data from collection (from table in SQL world).
@@ -134,15 +134,15 @@ It works very close to `replaceOne`:
 
 ### Delete
 `db.flight.deleteOne({departureAirport: "TXL"})` - departureAirport: "TXL" will be used as filter to find what exactly
- we want to delete from collection. Only first found document with "TXL" will be deleted.
+ we want to delete from collection. Only first found a document with "TXL" will be deleted.
 
 ### forEach
 It is possible to use .forEach operation after find() to do something with every element after filtering:
-`db.passengers.find().forEach((passengerData) => {printjson(passengerData)})` - bare in mind forEach uses syntax according
+`db.passengers.find().forEach((passengerData) => {printjson(passengerData)})` - Bear in mind that `forEach` uses syntax according
 your MongoDB driver. Shell uses Nodejs syntax.
 
 Pay attention:
-That's why you cant use `pretty()` after findOne() method - `pretty()` is a method of a Cursor, findOne does not return cursor,
+That's why you can't use `pretty()` after findOne() method - `pretty()` is a method of a Cursor, findOne does not return cursor,
 (and `pretty()` does not exist for a single value), findOne returns a sole value.
 
 </details>
@@ -457,7 +457,7 @@ in milliseconds.
 ![atomic](Section-6/9-atomic.jpg)
 
 # Importing Data
-to import data from json file you have to use mongoimport. This command is available globally (not from mongo terminal mode).
+to import data from json file you have to use `mongoimport`. This command is available globally (not from Mongo terminal mode).
 `-d` -database
 `-c` -collection name (could be implicitly created)
 `--jsonArray` - let your command to know that you send multiple objects, not only one
@@ -485,7 +485,7 @@ Others could be found in the official documentation.
 `db.movies.find({"rating.average": {$lt: 60}})` - average is lower than 60.
 
 **Hint 1**: Is you have some genres for your movies in the array, and you try to find "Drama" movies with
-`db.movies.find({genres: "Drama"}).pretty()` it also returns you movies with array of genres where "Drama" is included in.
+`db.movies.find({genres: "Drama"}).pretty()` it also returns you movies with the array of genres where "Drama" is included in.
 ![array-of-elements-and-filtering](Section-7/3-genres-array-and-filter-operator.jpg)
 
 If you want to find exact films with only "Drama" in array you have to use next operator:
@@ -510,7 +510,7 @@ The alternative of that is:
 `db.movies.find({"rating.average": {$gt: 9}, genres: "Drama"})` - it works the same because by default MongoDB has the concatenation mechanism.  
 But what the point of having 2 different ways to get the same results?  
 **Here the answer**:  
-`db.movies.find({genres: "Horror", genres: "Drama"})` - works in command prompt, but prohibited in Javascript because you can't declare 2 object keys
+`db.movies.find({genres: "Horror", genres: "Drama"})` - works in command prompt, but prohibited in Javascript because you can't declare 2 objects keys
 with the same name.  
 `db.movies.find({$and: [{genres: "Horror"}, {genres: "Drama"}]})` - but this one will work like a charm.  
 
@@ -640,9 +640,9 @@ Answer:
 * `count()` - using count with a cursor you can find out how much documents you can get.
 `db.movies.find().count()`
 BTW, when we make such call - we make a call to memory, not to data which comes from file. It happens because after his inner command "run"
-it place data into memory.
+it places data into the memory.
 
-* `find()` - when you make a call with find() from console you can type "it" to get next batch of documents. The MongoDb driver has another command and mechanism to
+* `find()` - when you make a call with find() from the console you can type "it" to get next batch of documents. The MongoDb driver has another command and mechanism to
 make the same.
 
 * `next()` - this method works in console and directly with mongoDb driver.  
@@ -657,7 +657,7 @@ if you call dataCursor - it will return you 20 documents again.
 
 2. `forEach` - another operation which could be used with cursor.  
 Example:  
-`dataCursor.forEach(doc => {printjson(doc)})`. printjson - method provided by driver which prints your document on the screen.
+`dataCursor.forEach(doc => {printjson(doc)})`. printjson - method provided by MongoDb driver which prints your document on the screen.
 **Pay attention. You will no longer able to use "it" to see more. After using forEach with the cursor it will return you all remain documents in db (obviously after prev next() calls)**
 
 3. if you make a call to `next()` after `forEach` - it will show you an error because the cursor will be exhausted.  
@@ -713,10 +713,12 @@ You see empty field because "Horror" did not simply include into them.
 ##### Projection. $slice for arrays.
 `$slice` allows you to pull specified amount of elements from array.
 `db.movies.find({"genres": "Drama"}, {genres: {$slice: 2}, name: 1}})` - this example will return you series with name, id(added by default) and 2 genres.  
-With slice you can use array form:
+With slice operator you can use array form:
 `db.movies.find({"genres": "Drama"}, {genres: {$slice: [1, 2], name: 1}})` - first parameter is amount of elements what you would like to skip. The second one - is the amount of element to pull.
 
 </details>
+
+
 
 <details>
 <summary>Section 9: Delete Operation</summary>

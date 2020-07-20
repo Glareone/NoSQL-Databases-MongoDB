@@ -718,3 +718,14 @@ With slice you can use array form:
 
 </details>
 
+<details>
+<summary>Section 9: Delete Operation</summary>
+
+1. `deleteOne` operator let you delete one with query selector:  
+`db.persons.deleteOne({name: 'Chris'})`
+
+2. `deleteMany` let you delete several records match your condition:  
+`db.persons.deleteMany({age: {$gt: 30}, isSporty: true}})`
+`db.persons.deleteMany({age: {$exist: false}, isSporty: true}})`
+
+</details>

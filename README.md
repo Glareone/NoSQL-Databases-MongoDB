@@ -728,4 +728,10 @@ With slice you can use array form:
 `db.persons.deleteMany({age: {$gt: 30}, isSporty: true}})`
 `db.persons.deleteMany({age: {$exist: false}, isSporty: true}})`
 
+3. to delete all records in collection:  
+`db.persons.deleteMany({})`
+`db.persons.drop()` - but pay attention, for the application it's not a typical task, and you should add some restriction to  forbid such action.
+Delete some records is okay, but drop of all collection looks like a strange wish. 
+`db.dropDatabase()` - to drop the entire database. To drop it you must first use another database using `use` operator and then call `dropDatabase` on your target you need to delete.
+
 </details>

@@ -718,7 +718,13 @@ With slice operator you can use array form:
 
 </details>
 
+<details>
+<summary>Section 9: Update Operation</summary>
 
+![update](Section-8/1-intro.jpg)
+#### Updating fields using "updateOne()", "updateMany()" and $set.
+
+</details>
 
 <details>
 <summary>Section 9: Delete Operation</summary>
@@ -735,5 +741,4 @@ With slice operator you can use array form:
 `db.persons.drop()` - but pay attention, for the application it's not a typical task, and you should add some restriction to  forbid such action.
 Delete some records is okay, but drop of all collection looks like a strange wish. 
 `db.dropDatabase()` - to drop the entire database. To drop it you must first use another database using `use` operator and then call `dropDatabase` on your target you need to delete.
-
 </details>

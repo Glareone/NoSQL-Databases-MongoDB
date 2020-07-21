@@ -746,9 +746,13 @@ Delete some records is okay, but drop of all collection looks like a strange wis
 <details>
 <summary>Section 10: Indexes</summary>
 
+![indexes](Section-10/1-intro.jpg)
+
 </details>
 
 <details>
 <summary>Section 11: Geospatial Data</summary>
+
+![indexes](Section-11/1-intro.jpg)
 
 </details>

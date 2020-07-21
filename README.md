@@ -742,3 +742,13 @@ With slice operator you can use array form:
 Delete some records is okay, but drop of all collection looks like a strange wish. 
 `db.dropDatabase()` - to drop the entire database. To drop it you must first use another database using `use` operator and then call `dropDatabase` on your target you need to delete.
 </details>
+
+<details>
+<summary>Section 10: Indexes</summary>
+
+</details>
+
+<details>
+<summary>Section 11: Geospatial Data</summary>
+
+</details>

@@ -747,6 +747,8 @@ Delete some records is okay, but drop of all collection looks like a strange wis
 <summary>Section 10: Indexes</summary>
 
 ![indexes](Section-10/1-intro.jpg)
+![indexes](Section-10/2-indexes.jpg)
+![indexes](Section-10/3-speed.jpg)
 
 </details>
 

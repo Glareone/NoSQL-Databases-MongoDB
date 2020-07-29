@@ -750,11 +750,54 @@ Delete some records is okay, but drop of all collection looks like a strange wis
 ![indexes](Section-10/2-indexes.jpg)
 ![indexes](Section-10/3-speed.jpg)
 
+#### Explain()
 To understand what mongoDB did and how it derived results for any commands (except insert) you can use `explain`:
 ![indexes](Section-10/4-explain.jpg)
+
 * Under `winning plan` you might notice stage: COLLSCAN. It means it looked throughtout entire collection to find a result set.
 * Also here is `rejectedPlans` - plan which were tried but they was worst than winning by performance.
 This property is an empty collection because of no plans except COLLSCAN to find all results in a current situation.
+
+Explain has a bunch of commands:
+`db.contacts.explain("executionStats").find({"dob.age": {$gt: 60}})` - detailed explanation.
+* `"executionTimeMillis" : 0,` - tells you about execution time.
+* ` "totalDocsExamined" : 5000,` - docs in our collection (because of COLLSCAN).  
+Result before index:  
+![indexes](Section-10/7-explanation-before-index.jpg)  
+
+#### Index
+To create an index you have to type:
+`db.persons.createIndex({"dob.age": 1})`  
+1 - for ascending order in the index.  
+-1 - for descending order in the index.  
+It doesn't make much sense except situations when you do sort of your results - it will speed up your query.  
+![indexes](Section-10/5-create-index.jpg)
+
+after that let's see how changed our query explanation:  
+![indexes](Section-10/6-explanation-after-index.jpg)  
+
+Execution time downs to 3.  
+And now you might see 2 stages in scan - `fetch` and `ixscan`:  
+`ixscan` - goes through indexes to find needed keys (which fits our requirements).  
+`fetch` - goes through the key collection and gets all results.
+
+Other values could be compared with previoud slide.
+
+**Pay Attention**
+* The restriction of index is the data fetching trying to find very common values or inexistent values:
+`db.contacts.explain("executionStats").find({"dob.age": {$gt: 20}})` - this query will work twice slower than without indexes at all
+because all our persons are older than 20, and our query must check all indexes and then - all records (5000 index keys + 5000 elements in collection).  
+* Indexes are also inefficient for boolean (because of only 2 values) and for string field "gender" (for example).
+
+Take care about your query scenarios. Indexes are very useful if your data spread well.
+
+#### Compound Index
+To create compound index: `db.persons.createIndex({"dob.age": 1, gender: 1})`.  
+Obviously this index would be helpful when you're using filter by age and gender.
+**But pay attention**, despite how SQL works this compound index in mongodb will speed up your queries which filter only "dob.age".
+1) It happened because indexes work from left to right and the `db.persons.find({"dob.age": {$gt: 35}})` will also use `"indexName: "dob.age_1_gender_1".` compound index.  
+2) For `gender` alone it does not work.
+
 
 </details>
 

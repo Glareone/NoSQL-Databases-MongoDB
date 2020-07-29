@@ -750,6 +750,12 @@ Delete some records is okay, but drop of all collection looks like a strange wis
 ![indexes](Section-10/2-indexes.jpg)
 ![indexes](Section-10/3-speed.jpg)
 
+To understand what mongoDB did and how it derived results for any commands (except insert) you can use `explain`:
+![indexes](Section-10/4-explain.jpg)
+* Under `winning plan` you might notice stage: COLLSCAN. It means it looked throughtout entire collection to find a result set.
+* Also here is `rejectedPlans` - plan which were tried but they was worst than winning by performance.
+This property is an empty collection because of no plans except COLLSCAN to find all results in a current situation.
+
 </details>
 
 <details>

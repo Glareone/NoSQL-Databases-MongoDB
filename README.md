@@ -781,6 +781,9 @@ MongoDb does the race for approaches between each other and tests which one can 
 Another options why mongodb will make the race again:
 ![explain](Section-10/11-update-plan-conditions.jpg)
 
+* To understand what plans had a race you have to call `db.persons.explain("allPlansExecution").find({name: 'Max', age: 29})`.  
+It will scan all indexes for you and how they perform with your data with comparisons how long they would take in different combinations or entirely without them.
+
 </details>
 
 <details>

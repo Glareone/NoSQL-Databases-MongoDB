@@ -745,12 +745,12 @@ Delete some records is okay, but drop of all collection looks like a strange wis
 
 
 <details>
-<summary>Section 10: Explain, Query Diagnosis and Efficient Query Planning</summary>
+<summary>Section 10: Explain, Query Diagnosis and Efficient Query Planning, Rejecting the Plan</summary>
 
 #### Explain()
 To understand what mongoDB did and how it derived results for any commands (except insert) you can use `explain`:
-![indexes](Section-10/4-explain.jpg)
-![indexes](Section-10/8-explain-params.jpg)
+![explain](Section-10/4-explain.jpg)
+![explain](Section-10/8-explain-params.jpg)
 
 * Under `winning plan` you might notice stage: COLLSCAN. It means it looked throughtout entire collection to find a result set.
 * Also here is `rejectedPlans` - plan which were tried but they was worst than winning by performance.
@@ -762,13 +762,24 @@ Explain has a bunch of commands:
 * ` "totalDocsExamined" : 5000,` - docs in our collection (because of COLLSCAN).  
 
 #### Efficient Queries 
-![indexes](Section-10/9-explain-covered-queries.jpg)
-Let's discuss about "totalDocsExamined" parameter. It should be as low as possible. For example, if you are looking for a document
+![explain](Section-10/9-explain-covered-queries.jpg)
+Let's discuss "totalDocsExamined" parameter. It should be as low as possible. For example, if you are looking for a document
 with name "Max" in your collection, and you have an index on this field - you will notice the "totalDocsExamined" value will not be null (even if you have a one document in your collection).  
 
 Index has not only pointer to the document, but also a value - in this situation the name will be his value. To avoid this extra-examination - let's change our query from  
 `db.persons.explain("executionStats").find({name: "Max"})`  To `db.persons.explain("executionStats").find({name: "Max"}, {_id: 0, name: 1})`.  
 You will notice 'totalDocsExamined' will become 0. It will use the value "Max" directly from the index, but not from the pointed data itself.
+
+#### How mongoDB rejects the plan
+How exactly does mongodb figure out which plan is better?  
+1) Mongo does through indexes which could help you with your query. (for example if you have an index for 2 fields - should mongo use only first field from index or both)
+`db.persons.createIndex({"dob.age": 1, name: 1})`  
+`db.persons.find({name: 'Max', age: {$gt: 29}})`. One of the rejected plans will be the plan which uses only age field (it can't use a name field because name is not on the first place)
+MongoDb does the race for approaches between each other and tests which one can query 1000 documents first.  
+![explain](Section-10/10-winning-plan.jpg)
+
+Another options why mongodb will make the race again:
+![explain](Section-10/11-update-plan-conditions.jpg)
 
 </details>
 
@@ -813,15 +824,22 @@ And now you might see 2 stages in scan - `fetch` and `ixscan`:
 `ixscan` - goes through indexes to find needed keys (which fits our requirements).  
 `fetch` - goes through the key collection and gets all results.
 
-Other values could be compared with previoud slide.
+Other values could be compared with previous slide.
 
 **Pay Attention**
-* The restriction of index is the data fetching trying to find very common values or inexistent values:
+* The restriction of index is the data fetching trying to find very common values or non-existent values:
 `db.contacts.explain("executionStats").find({"dob.age": {$gt: 20}})` - this query will work twice slower than without indexes at all
 because all our persons are older than 20, and our query must check all indexes and then - all records (5000 index keys + 5000 elements in collection).  
 * Indexes are also inefficient for boolean (because of only 2 values) and for string field "gender" (for example).
 
 Take care about your query scenarios. Indexes are very useful if your data spread well.
+
+#### Index, Parameters order in your query and index fields ordering.
+if you create an index for 2 fields:  
+`db.persons.createIndex({"dob.age": 1, name: 1})`  
+It doesn't matter how you call your data:  
+`db.persons.find({name: 'Max', age: {$gt: 29}})` or `db.persons.find({age: {$gt: 29}, name: 'Max'})`.  
+Index will be applied for both. MongoDb automatically reverse parameters in query for us.
 
 #### Compound Index
 To create compound index: `db.persons.createIndex({"dob.age": 1, gender: 1})`.  

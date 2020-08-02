@@ -743,6 +743,35 @@ Delete some records is okay, but drop of all collection looks like a strange wis
 `db.dropDatabase()` - to drop the entire database. To drop it you must first use another database using `use` operator and then call `dropDatabase` on your target you need to delete.
 </details>
 
+
+<details>
+<summary>Section 10: Explain, Query Diagnosis and Efficient Query Planning</summary>
+
+#### Explain()
+To understand what mongoDB did and how it derived results for any commands (except insert) you can use `explain`:
+![indexes](Section-10/4-explain.jpg)
+![indexes](Section-10/8-explain-params.jpg)
+
+* Under `winning plan` you might notice stage: COLLSCAN. It means it looked throughtout entire collection to find a result set.
+* Also here is `rejectedPlans` - plan which were tried but they was worst than winning by performance.
+This property is an empty collection because of no plans except COLLSCAN to find all results in a current situation.
+
+Explain has a bunch of commands:
+`db.contacts.explain("executionStats").find({"dob.age": {$gt: 60}})` - detailed explanation.
+* `"executionTimeMillis" : 0,` - tells you about execution time.
+* ` "totalDocsExamined" : 5000,` - docs in our collection (because of COLLSCAN).  
+
+#### Efficient Queries 
+![indexes](Section-10/9-explain-covered-queries.jpg)
+Let's discuss about "totalDocsExamined" parameter. It should be as low as possible. For example, if you are looking for a document
+with name "Max" in your collection, and you have an index on this field - you will notice the "totalDocsExamined" value will not be null (even if you have a one document in your collection).  
+
+Index has not only pointer to the document, but also a value - in this situation the name will be his value. To avoid this extra-examination - let's change our query from  
+`db.persons.explain("executionStats").find({name: "Max"})`  To `db.persons.explain("executionStats").find({name: "Max"}, {_id: 0, name: 1})`.  
+You will notice 'totalDocsExamined' will become 0. It will use the value "Max" directly from the index, but not from the pointed data itself.
+
+</details>
+
 <details>
 <summary>Section 10: Indexes</summary>
 
@@ -810,8 +839,8 @@ That's why you need indexes not only to speed up your queries but also be able t
 
 #### Partial Index and Partial Filters
 If would be useful if you need for example to query all people which are retired and older than 60.  
-If you apply index on age field your index would be unnecessary big. Index also eats your disk space.  
-Partial indexes are drastically smaller.  
+If you apply an index on your age field - your index would be unnecessary big. Index also eats your disk space.  
+Partial indexes are drastically smaller and could be useful in some cases (for example, when you are looking persons only older than 60).  
 In this situation you can apply a partial index:  
 1) `db.persons.createIndex({"dob.age": 1}, {partialFilterExpression: {"dob.age": {$gt: 60} }})` - if your case just to filter all persons older than 60.  
 2) `db.persons.createIndex({"dob.age": 1}, {partialFilterExpression: {gender: "male"}})` - but if you are filtering also by male gender. -- This index will apply only for documents with gender "male". 
@@ -823,9 +852,15 @@ To call it properly and use your recently created index: `db.persons.find({"dob.
 To control what's going on and why - use `explain()`.
 
 #### Non-existing values and unique indexes
-Also be aware. If you add an unique index for field - undefined value will be also a unique value, you can't add two documents **without** this field.
+Also, be aware. If you add an unique index for field - undefined value will be also a unique value, you can't add two documents **without** this field.
 `db.persons.insertMany([{name: 'Max', email: "testemail@gmail.com"},{ name: 'Anna' }, { name: 'Gregor' }])` - second and third doc are without email. And if you have an unique index on `email` field - Mongodb does not allow you to perform such InsertMany.  
 To avoid such situation just use a partial index and set existing: `db.persons.createIndex({email: 1}, {unique: true, partialFilterExpression: {email : {$exists: true}}})` 
+
+#### Time-To-Live (TTL) indexes
+Such kind of indexes could be useful for self-destroying data like sessions of users.  
+`db.sessions.insertOne({data: "randomtext", createdAt: new Date()})`
+`db.sessions.createIndex({createdAt: 1}, {expireAfterSecond: 10})` - expireAfterSeconds parameter works only on date fields. It could be added but will be ignored. This parameter means that this element will be deleted after 10 second from adding it to collection.
+
 </details>
 
 <details>

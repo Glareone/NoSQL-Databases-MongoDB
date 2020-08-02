@@ -743,6 +743,49 @@ Delete some records is okay, but drop of all collection looks like a strange wis
 `db.dropDatabase()` - to drop the entire database. To drop it you must first use another database using `use` operator and then call `dropDatabase` on your target you need to delete.
 </details>
 
+
+<details>
+<summary>Section 10: Explain, Query Diagnosis and Efficient Query Planning, Rejecting the Plan</summary>
+
+#### Explain()
+To understand what mongoDB did and how it derived results for any commands (except insert) you can use `explain`:
+![explain](Section-10/4-explain.jpg)
+![explain](Section-10/8-explain-params.jpg)
+
+* Under `winning plan` you might notice stage: COLLSCAN. It means it looked throughtout entire collection to find a result set.
+* Also here is `rejectedPlans` - plan which were tried but they was worst than winning by performance.
+This property is an empty collection because of no plans except COLLSCAN to find all results in a current situation.
+
+Explain has a bunch of commands:
+`db.contacts.explain("executionStats").find({"dob.age": {$gt: 60}})` - detailed explanation.
+* `"executionTimeMillis" : 0,` - tells you about execution time.
+* ` "totalDocsExamined" : 5000,` - docs in our collection (because of COLLSCAN).  
+
+#### Efficient Queries 
+![explain](Section-10/9-explain-covered-queries.jpg)
+Let's discuss "totalDocsExamined" parameter. It should be as low as possible. For example, if you are looking for a document
+with name "Max" in your collection, and you have an index on this field - you will notice the "totalDocsExamined" value will not be null (even if you have a one document in your collection).  
+
+Index has not only pointer to the document, but also a value - in this situation the name will be his value. To avoid this extra-examination - let's change our query from  
+`db.persons.explain("executionStats").find({name: "Max"})`  To `db.persons.explain("executionStats").find({name: "Max"}, {_id: 0, name: 1})`.  
+You will notice 'totalDocsExamined' will become 0. It will use the value "Max" directly from the index, but not from the pointed data itself.
+
+#### How mongoDB rejects the plan
+How exactly does mongodb figure out which plan is better?  
+1) Mongo does through indexes which could help you with your query. (for example if you have an index for 2 fields - should mongo use only first field from index or both)
+`db.persons.createIndex({"dob.age": 1, name: 1})`  
+`db.persons.find({name: 'Max', age: {$gt: 29}})`. One of the rejected plans will be the plan which uses only age field (it can't use a name field because name is not on the first place)
+MongoDb does the race for approaches between each other and tests which one can query 1000 documents first.  
+![explain](Section-10/10-winning-plan.jpg)
+
+Another options why mongodb will make the race again:
+![explain](Section-10/11-update-plan-conditions.jpg)
+
+* To understand what plans had a race you have to call `db.persons.explain("allPlansExecution").find({name: 'Max', age: 29})`.  
+It will scan all indexes for you and how they perform with your data with comparisons how long they would take in different combinations or entirely without them.
+
+</details>
+
 <details>
 <summary>Section 10: Indexes</summary>
 
@@ -765,8 +808,11 @@ Explain has a bunch of commands:
 Result before index:  
 ![indexes](Section-10/7-explanation-before-index.jpg)  
 
-#### Index
-To create an index you have to type:
+#### Index. Default index.
+* To get all indexes you have to type:
+`db.persons.getIndexes()`.  Mongodb always maintains the default index in _id field for you.
+
+* To create an index you have to type:
 `db.persons.createIndex({"dob.age": 1})`  
 1 - for ascending order in the index.  
 -1 - for descending order in the index.  
@@ -781,15 +827,22 @@ And now you might see 2 stages in scan - `fetch` and `ixscan`:
 `ixscan` - goes through indexes to find needed keys (which fits our requirements).  
 `fetch` - goes through the key collection and gets all results.
 
-Other values could be compared with previoud slide.
+Other values could be compared with previous slide.
 
 **Pay Attention**
-* The restriction of index is the data fetching trying to find very common values or inexistent values:
+* The restriction of index is the data fetching trying to find very common values or non-existent values:
 `db.contacts.explain("executionStats").find({"dob.age": {$gt: 20}})` - this query will work twice slower than without indexes at all
 because all our persons are older than 20, and our query must check all indexes and then - all records (5000 index keys + 5000 elements in collection).  
 * Indexes are also inefficient for boolean (because of only 2 values) and for string field "gender" (for example).
 
 Take care about your query scenarios. Indexes are very useful if your data spread well.
+
+#### Index, Parameters order in your query and index fields ordering.
+if you create an index for 2 fields:  
+`db.persons.createIndex({"dob.age": 1, name: 1})`  
+It doesn't matter how you call your data:  
+`db.persons.find({name: 'Max', age: {$gt: 29}})` or `db.persons.find({age: {$gt: 29}, name: 'Max'})`.  
+Index will be applied for both. MongoDb automatically reverse parameters in query for us.
 
 #### Compound Index
 To create compound index: `db.persons.createIndex({"dob.age": 1, gender: 1})`.  
@@ -798,6 +851,36 @@ Obviously this index would be helpful when you're using filter by age and gender
 1) It happened because indexes work from left to right and the `db.persons.find({"dob.age": {$gt: 35}})` will also use `"indexName: "dob.age_1_gender_1".` compound index.  
 2) For `gender` alone it does not work.
 
+#### Indexes for Sorting
+For ordering Mongodb uses only 42MB of internal storage (for fetched documents) and if you don't use indexes you can face with timeout (when too much data to sort and it's not possible for mongo).
+That's why you need indexes not only to speed up your queries but also be able to make such query.
+
+#### Unique Index
+`db.persons.createIndex({email: 1}, {unique: true})` - you have to simply add the parameter.
+
+#### Partial Index and Partial Filters
+If would be useful if you need for example to query all people which are retired and older than 60.  
+If you apply an index on your age field - your index would be unnecessary big. Index also eats your disk space.  
+Partial indexes are drastically smaller and could be useful in some cases (for example, when you are looking persons only older than 60).  
+In this situation you can apply a partial index:  
+1) `db.persons.createIndex({"dob.age": 1}, {partialFilterExpression: {"dob.age": {$gt: 60} }})` - if your case just to filter all persons older than 60.  
+2) `db.persons.createIndex({"dob.age": 1}, {partialFilterExpression: {gender: "male"}})` - but if you are filtering also by male gender. -- This index will apply only for documents with gender "male". 
+
+**Be aware of the second index**  
+What do i mean? I mean if you apply such index but you use the next query: `db.persons.find({"dob.age": {$gt: 60}})` - mongo will decide that's its too risky too use index with gender because you do not use gender in filtering explicitly.  
+To call it properly and use your recently created index: `db.persons.find({"dob.age": {$gt: 60}, gender: "male"})`.
+
+To control what's going on and why - use `explain()`.
+
+#### Non-existing values and unique indexes
+Also, be aware. If you add an unique index for field - undefined value will be also a unique value, you can't add two documents **without** this field.
+`db.persons.insertMany([{name: 'Max', email: "testemail@gmail.com"},{ name: 'Anna' }, { name: 'Gregor' }])` - second and third doc are without email. And if you have an unique index on `email` field - Mongodb does not allow you to perform such InsertMany.  
+To avoid such situation just use a partial index and set existing: `db.persons.createIndex({email: 1}, {unique: true, partialFilterExpression: {email : {$exists: true}}})` 
+
+#### Time-To-Live (TTL) indexes
+Such kind of indexes could be useful for self-destroying data like sessions of users.  
+`db.sessions.insertOne({data: "randomtext", createdAt: new Date()})`
+`db.sessions.createIndex({createdAt: 1}, {expireAfterSecond: 10})` - expireAfterSeconds parameter works only on date fields. It could be added but will be ignored. This parameter means that this element will be deleted after 10 second from adding it to collection.
 
 </details>
 

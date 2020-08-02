@@ -805,6 +805,27 @@ Obviously this index would be helpful when you're using filter by age and gender
 For ordering Mongodb uses only 42MB of internal storage (for fetched documents) and if you don't use indexes you can face with timeout (when too much data to sort and it's not possible for mongo).
 That's why you need indexes not only to speed up your queries but also be able to make such query.
 
+#### Unique Index
+`db.persons.createIndex({email: 1}, {unique: true})` - you have to simply add the parameter.
+
+#### Partial Index and Partial Filters
+If would be useful if you need for example to query all people which are retired and older than 60.  
+If you apply index on age field your index would be unnecessary big. Index also eats your disk space.  
+Partial indexes are drastically smaller.  
+In this situation you can apply a partial index:  
+1) `db.persons.createIndex({"dob.age": 1}, {partialFilterExpression: {"dob.age": {$gt: 60} }})` - if your case just to filter all persons older than 60.  
+2) `db.persons.createIndex({"dob.age": 1}, {partialFilterExpression: {gender: "male"}})` - but if you are filtering also by male gender. -- This index will apply only for documents with gender "male". 
+
+**Be aware of the second index**  
+What do i mean? I mean if you apply such index but you use the next query: `db.persons.find({"dob.age": {$gt: 60}})` - mongo will decide that's its too risky too use index with gender because you do not use gender in filtering explicitly.  
+To call it properly and use your recently created index: `db.persons.find({"dob.age": {$gt: 60}, gender: "male"})`.
+
+To control what's going on and why - use `explain()`.
+
+#### Non-existing values and unique indexes
+Also be aware. If you add an unique index for field - undefined value will be also a unique value, you can't add two documents **without** this field.
+`db.persons.insertMany([{name: 'Max', email: "testemail@gmail.com"},{ name: 'Anna' }, { name: 'Gregor' }])` - second and third doc are without email. And if you have an unique index on `email` field - Mongodb does not allow you to perform such InsertMany.  
+To avoid such situation just use a partial index and set existing: `db.persons.createIndex({email: 1}, {unique: true, partialFilterExpression: {email : {$exists: true}}})` 
 </details>
 
 <details>

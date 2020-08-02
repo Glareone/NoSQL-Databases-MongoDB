@@ -765,8 +765,11 @@ Explain has a bunch of commands:
 Result before index:  
 ![indexes](Section-10/7-explanation-before-index.jpg)  
 
-#### Index
-To create an index you have to type:
+#### Index. Default index.
+* To get all indexes you have to type:
+`db.persons.getIndexes()`.  Mongodb always maintains the default index in _id field for you.
+
+* To create an index you have to type:
 `db.persons.createIndex({"dob.age": 1})`  
 1 - for ascending order in the index.  
 -1 - for descending order in the index.  
@@ -798,6 +801,9 @@ Obviously this index would be helpful when you're using filter by age and gender
 1) It happened because indexes work from left to right and the `db.persons.find({"dob.age": {$gt: 35}})` will also use `"indexName: "dob.age_1_gender_1".` compound index.  
 2) For `gender` alone it does not work.
 
+#### Indexes for Sorting
+For ordering Mongodb uses only 42MB of internal storage (for fetched documents) and if you don't use indexes you can face with timeout (when too much data to sort and it's not possible for mongo).
+That's why you need indexes not only to speed up your queries but also be able to make such query.
 
 </details>
 

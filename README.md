@@ -761,7 +761,7 @@ Explain has a bunch of commands:
 * `"executionTimeMillis" : 0,` - tells you about execution time.
 * ` "totalDocsExamined" : 5000,` - docs in our collection (because of COLLSCAN).  
 
-#### Efficient Queries 
+### Efficient Queries 
 ![explain](Section-10/9-explain-covered-queries.jpg)
 Let's discuss "totalDocsExamined" parameter. It should be as low as possible. For example, if you are looking for a document
 with name "Max" in your collection, and you have an index on this field - you will notice the "totalDocsExamined" value will not be null (even if you have a one document in your collection).  
@@ -770,7 +770,7 @@ Index has not only pointer to the document, but also a value - in this situation
 `db.persons.explain("executionStats").find({name: "Max"})`  To `db.persons.explain("executionStats").find({name: "Max"}, {_id: 0, name: 1})`.  
 You will notice 'totalDocsExamined' will become 0. It will use the value "Max" directly from the index, but not from the pointed data itself.
 
-#### How mongoDB rejects the plan
+### How mongoDB rejects the plan
 How exactly does mongodb figure out which plan is better?  
 1) Mongo does through indexes which could help you with your query. (for example if you have an index for 2 fields - should mongo use only first field from index or both)
 `db.persons.createIndex({"dob.age": 1, name: 1})`  
@@ -793,7 +793,7 @@ It will scan all indexes for you and how they perform with your data with compar
 ![indexes](Section-10/2-indexes.jpg)
 ![indexes](Section-10/3-speed.jpg)
 
-#### Explain()
+### Explain()
 To understand what mongoDB did and how it derived results for any commands (except insert) you can use `explain`:
 ![indexes](Section-10/4-explain.jpg)
 
@@ -808,7 +808,7 @@ Explain has a bunch of commands:
 Result before index:  
 ![indexes](Section-10/7-explanation-before-index.jpg)  
 
-#### Index. Default index.
+### Index. Default index.
 * To get all indexes you have to type:
 `db.persons.getIndexes()`.  Mongodb always maintains the default index in _id field for you.
 
@@ -837,28 +837,28 @@ because all our persons are older than 20, and our query must check all indexes 
 
 Take care about your query scenarios. Indexes are very useful if your data spread well.
 
-#### Index, Parameters order in your query and index fields ordering.
+### Index, Parameters order in your query and index fields ordering.
 if you create an index for 2 fields:  
 `db.persons.createIndex({"dob.age": 1, name: 1})`  
 It doesn't matter how you call your data:  
 `db.persons.find({name: 'Max', age: {$gt: 29}})` or `db.persons.find({age: {$gt: 29}, name: 'Max'})`.  
 Index will be applied for both. MongoDb automatically reverse parameters in query for us.
 
-#### Compound Index
+### Compound Index
 To create compound index: `db.persons.createIndex({"dob.age": 1, gender: 1})`.  
 Obviously this index would be helpful when you're using filter by age and gender.
 **But pay attention**, despite how SQL works this compound index in mongodb will speed up your queries which filter only "dob.age".
 1) It happened because indexes work from left to right and the `db.persons.find({"dob.age": {$gt: 35}})` will also use `"indexName: "dob.age_1_gender_1".` compound index.  
 2) For `gender` alone it does not work.
 
-#### Indexes for Sorting
+### Indexes for Sorting
 For ordering Mongodb uses only 42MB of internal storage (for fetched documents) and if you don't use indexes you can face with timeout (when too much data to sort and it's not possible for mongo).
 That's why you need indexes not only to speed up your queries but also be able to make such query.
 
-#### Unique Index
+### Unique Index
 `db.persons.createIndex({email: 1}, {unique: true})` - you have to simply add the parameter.
 
-#### Partial Index and Partial Filters
+### Partial Index and Partial Filters
 If would be useful if you need for example to query all people which are retired and older than 60.  
 If you apply an index on your age field - your index would be unnecessary big. Index also eats your disk space.  
 Partial indexes are drastically smaller and could be useful in some cases (for example, when you are looking persons only older than 60).  
@@ -877,10 +877,33 @@ Also, be aware. If you add an unique index for field - undefined value will be a
 `db.persons.insertMany([{name: 'Max', email: "testemail@gmail.com"},{ name: 'Anna' }, { name: 'Gregor' }])` - second and third doc are without email. And if you have an unique index on `email` field - Mongodb does not allow you to perform such InsertMany.  
 To avoid such situation just use a partial index and set existing: `db.persons.createIndex({email: 1}, {unique: true, partialFilterExpression: {email : {$exists: true}}})` 
 
-#### Time-To-Live (TTL) indexes
+### Time-To-Live (TTL) indexes
 Such kind of indexes could be useful for self-destroying data like sessions of users.  
 `db.sessions.insertOne({data: "randomtext", createdAt: new Date()})`
 `db.sessions.createIndex({createdAt: 1}, {expireAfterSecond: 10})` - expireAfterSeconds parameter works only on date fields. It could be added but will be ignored. This parameter means that this element will be deleted after 10 second from adding it to collection.
+
+### Multi-key index, index for array
+* Multikey index is an index which apply to arrays. You can find a boolean "multiKey" field in you winning plan using explain().  
+* Let's add some data: `db.persons.insertOne({name: "Max", hobbies: ["Cooking", "Sports"], addresses: [{street: "Main Street"}, {street: "Second Street"}]})`.  
+And now:  
+`db.persons.createIndex({hobbies: 1})`
+They work like classic index, but it stores differently. It pulls out all key from array and stores as a separate element in your index.  
+If your array has 4k elements - your index also will store 4k elements one per each element in the array. You should bear this in mind.  
+* It's also possible to use index on the array of objects, but it will use COLLSCAN instead of IXSCAN with the next query:  
+`db.persons.createIndex({addresses: 1})`  
+After using `db.persons.explain("executionStats").find({"addresses.street": "Main Street"})`
+![indexes](Section-10/12-index-for-arrays.jpg).  
+The reason of that, of course, because the index holds the whole documents, not the fields.  
+* **BUT** If you change a bit your find operation to work with objects - it will work using IXSCAN:  
+`db.persons.explain("executionStats").find({"addresses": {street: "Main Street"}})`
+* Another capability is to create an index on another manner - on a field inside the documents:  
+`db.persons.createIndex({"addresses.steet": 1})`. It also will be a multi-key index and will work like a charm with the `db.persons.explain("executionStats").find({"addresses.street": "Main Street"})`.
+
+### Restrictions for array indexes
+Restrictions relate to compound indexes for 2+ array fields.  
+data: `db.persons.insertOne({name: "Max", hobbies: ["Cooking", "Sports"], addresses: [{street: "Main Street"}, {street: "Second Street"}]})`  
+`db.persons.createIndex({name: 1, hobbies: 1})`. That does work. 1 multi-key(array) field. Another (name) is a string.
+`db.persons.createIndex({addresses: 1, hobbies: 1})`. That does not work for 2 arrays fields.
 
 </details>
 

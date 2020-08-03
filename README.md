@@ -910,6 +910,22 @@ data: `db.persons.insertOne({name: "Max", hobbies: ["Cooking", "Sports"], addres
 <details>
 <summary>Section 10: Text indexes, Sorting for them, Combined text indexes</summary>
 
+* It's an ability to avoid regex using due its not well performance.
+![indexes](Section-10/13-text-index.jpg)  
+How to properly create it:
+`db.products.createIndex({description: "text"})` instead of `db.products.createIndex({description: 1})`.  
+Will create a special index which allows you to search by a part of the description.
+
+* To utilize it: `db.products.find({$text: {$search: "awesome"}})`.  
+No worries about capital cases - all store in the index using lower-case.
+
+* In base scenarios it doesn't really matter which order you place search words in. But sometimes it's important.
+to use it with ordering you have to use "score" inside $search operator:
+`db.products.find({$text: {$search: "awesome"}}, {score: {$meta: "textScore"}}).pretty()`
+![indexes](Section-10/14-score-text-index.jpg)
+You can use it to order you result set or find the best result for you:  
+`db.products.find({$text: {$search: "awesome"}}, {score: {$meta: "textScore"}}).sort({score: {$meta: "textScore"}}).pretty()`
+
 </details>
 
 <details>

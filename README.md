@@ -908,6 +908,11 @@ data: `db.persons.insertOne({name: "Max", hobbies: ["Cooking", "Sports"], addres
 </details>
 
 <details>
+<summary>Section 10: Text indexes, Sorting for them, Combined text indexes</summary>
+
+</details>
+
+<details>
 <summary>Section 11: Geospatial Data</summary>
 
 ![indexes](Section-11/1-intro.jpg)

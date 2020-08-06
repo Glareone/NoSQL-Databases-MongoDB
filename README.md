@@ -793,6 +793,12 @@ It will scan all indexes for you and how they perform with your data with compar
 ![indexes](Section-10/2-indexes.jpg)
 ![indexes](Section-10/3-speed.jpg)
 
+### 2 Ways how to create indexes
+![indexes](Section-10/15-2ways-of-creating-indexes.jpg). 
+If you add you index in a foreground you locks your collection on writing. It's not able for production db. That's why you can use index creation in a background.
+1) To create it in a classic way (foreground) - `dp.yourcollection.createIndex({field: 1})`.  
+2) To create it in a background - `dp.yourcollection.createIndex({field: 1}, {background: true.})`
+
 ### Explain()
 To understand what mongoDB did and how it derived results for any commands (except insert) you can use `explain`:
 ![indexes](Section-10/4-explain.jpg)

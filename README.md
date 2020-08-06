@@ -944,6 +944,25 @@ It will let you search by several fields using index and `db.products.find({$tex
 To exclude words from search you can simply use -t key:  
 `db.products.find({$text: {$search: "Awesome -t-shirt"}})` - will exclude texts where "shirt" appears.
 
+#### Setting Default Language, using weights.
+* Default language: 
+To manually assign default language you can simply say: `dp.products.createIndex({title: "text", description: "text"}, {default_language: "german"})`.
+There is a list of support languages, you can't type here whatever you want.
+What it allows you? It defines which words and articles\stopwords\prefixes will be removed. ('is will be removed in English', 'ist' will be removed in German) 
+
+But if you use different languages in different languages better to do next:
+`db.products.find({$text: {$search: "A Bool title", $language: "german"}})`
+
+* Weights:
+When you create a combined index you can specify your field weights. It could be important when mongo calculates the score of the results.  
+`dp.products.createIndex({title: "text", description: "text"}, {weights: {title: 1, description: 10}})` - description would be worth 10 times as much as title.   
+To check your weights and how it affets the final score:  
+`db.products.find({$text: {$search: "awesome"}}, {score: {$meta: "textScore"}}).pretty()`
+
+#### Case sensitive
+`db.products.find({$text: {$search: "A Bool title", $caseSensitive: true}})`
+
+
 </details>
 
 <details>

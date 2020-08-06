@@ -793,6 +793,12 @@ It will scan all indexes for you and how they perform with your data with compar
 ![indexes](Section-10/2-indexes.jpg)
 ![indexes](Section-10/3-speed.jpg)
 
+### 2 Ways how to create indexes
+![indexes](Section-10/15-2ways-of-creating-indexes.jpg). 
+If you add you index in a foreground you locks your collection on writing. It's not able for production db. That's why you can use index creation in a background.
+1) To create it in a classic way (foreground) - `dp.yourcollection.createIndex({field: 1})`.  
+2) To create it in a background - `dp.yourcollection.createIndex({field: 1}, {background: true.})`
+
 ### Explain()
 To understand what mongoDB did and how it derived results for any commands (except insert) you can use `explain`:
 ![indexes](Section-10/4-explain.jpg)
@@ -910,7 +916,8 @@ data: `db.persons.insertOne({name: "Max", hobbies: ["Cooking", "Sports"], addres
 <details>
 <summary>Section 10: Text indexes, Sorting for them, Combined text indexes</summary>
 
-* It's an ability to avoid regex using due its not well performance.
+#### Text indexes
+* It's an ability to avoid regex using due it's not well performance.
 ![indexes](Section-10/13-text-index.jpg)  
 How to properly create it:
 `db.products.createIndex({description: "text"})` instead of `db.products.createIndex({description: 1})`.  
@@ -925,6 +932,42 @@ to use it with ordering you have to use "score" inside $search operator:
 ![indexes](Section-10/14-score-text-index.jpg)
 You can use it to order you result set or find the best result for you:  
 `db.products.find({$text: {$search: "awesome"}}, {score: {$meta: "textScore"}}).sort({score: {$meta: "textScore"}}).pretty()`
+
+#### Drop text index
+You can't drop text index by field writing `db.products.dropIndex({title: "text"})`; It doesn't work.
+But you can drop it using indexname:
+`dp.products.getIndexes()` and then get name from "name" field (i.e. "description_text")  
+`dp.products.dropIndex("description_text")`
+
+#### Combined Text indexes
+Its not possible to create several text indexes on one document! But we can merge several text field into one text index.  
+1) you have to drop your previous text index
+2) you can add a new one on multiple fields: `dp.products.createIndex({title: "text", description: "text"})`
+
+It will let you search by several fields using index and `db.products.find({$text: {$search: "A Bool title"}})` (which comes from title field)
+
+#### Exclude words from text indexes
+To exclude words from search you can simply use -t key:  
+`db.products.find({$text: {$search: "Awesome -t-shirt"}})` - will exclude texts where "shirt" appears.
+
+#### Setting Default Language, using weights.
+* Default language: 
+To manually assign default language you can simply say: `dp.products.createIndex({title: "text", description: "text"}, {default_language: "german"})`.
+There is a list of support languages, you can't type here whatever you want.
+What it allows you? It defines which words and articles\stopwords\prefixes will be removed. ('is will be removed in English', 'ist' will be removed in German) 
+
+But if you use different languages in different languages better to do next:
+`db.products.find({$text: {$search: "A Bool title", $language: "german"}})`
+
+* Weights:
+When you create a combined index you can specify your field weights. It could be important when mongo calculates the score of the results.  
+`dp.products.createIndex({title: "text", description: "text"}, {weights: {title: 1, description: 10}})` - description would be worth 10 times as much as title.   
+To check your weights and how it affets the final score:  
+`db.products.find({$text: {$search: "awesome"}}, {score: {$meta: "textScore"}}).pretty()`
+
+#### Case sensitive
+`db.products.find({$text: {$search: "A Bool title", $caseSensitive: true}})`
+
 
 </details>
 

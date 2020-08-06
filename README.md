@@ -910,7 +910,8 @@ data: `db.persons.insertOne({name: "Max", hobbies: ["Cooking", "Sports"], addres
 <details>
 <summary>Section 10: Text indexes, Sorting for them, Combined text indexes</summary>
 
-* It's an ability to avoid regex using due its not well performance.
+#### Text indexes
+* It's an ability to avoid regex using due it's not well performance.
 ![indexes](Section-10/13-text-index.jpg)  
 How to properly create it:
 `db.products.createIndex({description: "text"})` instead of `db.products.createIndex({description: 1})`.  
@@ -925,6 +926,15 @@ to use it with ordering you have to use "score" inside $search operator:
 ![indexes](Section-10/14-score-text-index.jpg)
 You can use it to order you result set or find the best result for you:  
 `db.products.find({$text: {$search: "awesome"}}, {score: {$meta: "textScore"}}).sort({score: {$meta: "textScore"}}).pretty()`
+
+#### Drop text index
+You can't drop text index by field writing `db.products.dropIndex({title: "text"})`; It doesn't work.
+But you can drop it using indexname:
+`dp.products.getIndexes()` and then get name from "name" field (i.e. "description_text")  
+`dp.products.dropIndex(description_text)`
+
+#### Combined Text indexes
+Its not possible to create several text indexes on one document! But we can merge several text field into one text index.
 
 </details>
 

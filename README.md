@@ -931,10 +931,18 @@ You can use it to order you result set or find the best result for you:
 You can't drop text index by field writing `db.products.dropIndex({title: "text"})`; It doesn't work.
 But you can drop it using indexname:
 `dp.products.getIndexes()` and then get name from "name" field (i.e. "description_text")  
-`dp.products.dropIndex(description_text)`
+`dp.products.dropIndex("description_text")`
 
 #### Combined Text indexes
-Its not possible to create several text indexes on one document! But we can merge several text field into one text index.
+Its not possible to create several text indexes on one document! But we can merge several text field into one text index.  
+1) you have to drop your previous text index
+2) you can add a new one on multiple fields: `dp.products.createIndex({title: "text", description: "text"})`
+
+It will let you search by several fields using index and `db.products.find({$text: {$search: "A Bool title"}})` (which comes from title field)
+
+#### Exclude words from text indexes
+To exclude words from search you can simply use -t key:  
+`db.products.find({$text: {$search: "Awesome -t-shirt"}})` - will exclude texts where "shirt" appears.
 
 </details>
 

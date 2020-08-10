@@ -980,7 +980,7 @@ To check your weights and how it affets the final score:
 Structure:  
 `db.places.insertOne({name: "California Academy", location: { type: <GeoJSON type>, coordinates: <coordinates> }})`
 To add a GeoJSON location you have to write the next (For Point type):  
-`db.places.insertOne({name: "California Academy", location: { type: "Point", oordinates: [-122, 47] }})`
+`db.places.insertOne({name: "California Academy", location: { type: "Point", coordinates: [-122, 47] }})`
 
 ### Geo Query
 #### To find what is near to the next point:  
@@ -1019,5 +1019,12 @@ pay attention on 1/6378.1 - translation from kilometers to radians.
 to add an index:  
 `db.places.createIndex({location: "2dsphere"})` - 2dsphere is a special index format for geospatial data.
 location comes from our collection field, it is not a reserved word.
+
+</details>
+
+<details>
+<summary>Section 13: Numeric Data</summary>
+
+![error](Section-13/1-numbers.jpg)
 
 </details>

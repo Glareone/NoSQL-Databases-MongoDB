@@ -974,6 +974,50 @@ To check your weights and how it affets the final score:
 <details>
 <summary>Section 11: Geospatial Data</summary>
 
-![indexes](Section-11/1-intro.jpg)
+![intro](Section-11/1-intro.jpg)
+
+### Adding
+Structure:  
+`db.places.insertOne({name: "California Academy", location: { type: <GeoJSON type>, coordinates: <coordinates> }})`
+To add a GeoJSON location you have to write the next (For Point type):  
+`db.places.insertOne({name: "California Academy", location: { type: "Point", oordinates: [-122, 47] }})`
+
+### Geo Query
+#### To find what is near to the next point:  
+`db.places.find({location: {$near: {$geometry: { type: "Pont", coordinates: [-122, 47]}}}})`  
+location comes from our collection field, it is not a reserved word.
+
+you can use $maxDistance and $minDistance as well (in meters):
+`db.places.find({location: {$near: {$geometry: { type: "Pont", coordinates: [-122, 47]}, $maxDistance: 30, $minDistance: 10}}})`  
+
+First, it will show you an error:  
+![error](Section-11/2-error.jpg)
+To let it work you have to add a special GeoJSON index to your collection.
+
+#### To find something inside certain area (inside polygon):
+create a variable to manipulate data easier:  
+`const p1 = [-122.4547, 37.774]`
+`const p2 = [-122.4503, 37.766]`
+`const p3 = [-122.5102, 37.76411]`
+`const p4 = [-122.51088, 37.7711]`
+
+to Find all of our points inside this polygon:  
+`db.places.find({location: {$geoWithin: {$geometry: {type: "Polygon", coordinates: [[p1,p2,p3,p4,p1]]}}}})` - pay attention on the array inside array!
+
+#### To find out is a User inside area (find all areas which your point belongs to):
+1) let's store our area inside database first.  
+`db.areas.insertOne({name: "Golden Gate Park", area: {type: "Polygon", coordinates: [[[-122.4547, 37.774], [-122.4503, 37.766], [-122.5102, 37.76411], [-122.51088, 37.7711], [-122.4547, 37.774]]]}})`
+2) create index (on area field): `db.areas.createIndex({area: "2dsphere"})`
+3) find all areas where your point belongs to: $geoIntersects  `db.areas.find({area:{$geoIntersects: {$geometry: {type: "Point", coordinates: [-122.49089, 37.7699] } }}})`  
+It will return you your area which was previously added in areas collection.
+
+#### To find everything inside radius:
+pay attention on 1/6378.1 - translation from kilometers to radians.
+`db.places.find({location: {$geoWithin: {$centerSphere: [[-122.4620, 37.7286], 1 / 6378.1 ]}}})`
+
+### Geospatial index
+to add an index:  
+`db.places.createIndex({location: "2dsphere"})` - 2dsphere is a special index format for geospatial data.
+location comes from our collection field, it is not a reserved word.
 
 </details>

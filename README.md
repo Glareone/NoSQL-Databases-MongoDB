@@ -1031,6 +1031,8 @@ You can use pipeline stages in `db.collection.aggregate` and `db.aggregate metho
 **Pay attention**: aggregate use cursor, it will not loop up all your collection.
 To speed up it you can use indexes to search through indexes first and take their advantages.
 
+* You can use steps multiple times. For example you can use $project several times within aggregation.
+
 * To use multiline insert(leave your brackets open):  
 ![aggregation framework](Section-12/2-aggregate-multiline.jpg)
 
@@ -1105,6 +1107,33 @@ Show the first name with first character in the uppercase mode for first name an
        }
      }
    ]).pretty();`
+
+### Project to geoJSON
+If you add a `name` field on the first $project step - you could use it on the second $project step.   
+For example, we create a location as a geoJSON object on the first step and just include it on the second.  
+If we do not specify fields on the first project but try to use on the second - they will just be omitted.  
+
+`db.persons.aggregate([
+  {$project: { name: 1, location: {type: "Point", coordinates: [ "$location.coordinates.longitude", "$location.coordinates.latitude" ] } } },
+  {$project: { _id: 0, name: 1, gender: 1, location: 1 }} 
+]).pretty()`
+
+![aggregation](Section-12/5-aggregation-geo.jpg)
+
+#### Converting geoJSON
+
+* If you noticed lat and long are strings. We have to convert it using $convert:  
+`db.persons.aggregate([
+  {$project: { name: 1, location: {type: "Point", coordinates: [
+                                                              { $convert: { input: "$location.coordinates.longitude", to: "double", onError: 0.0, onNull: 0.0 }},
+                                                              { $convert: { input: "$location.coordinates.latitude", to: "double", onError: 0.0, onNull: 0.0 }}
+                                                            ] } } },
+  {$project: { _id: 0, name: 1, gender: 1, location: 1 } } 
+]).pretty()`
+
+![aggregation](Section-12/6-convert-geo.jpg)
+
+#### Converting Date
 
 other operators for $project: [project operators](https://docs.mongodb.com/manual/reference/operator/aggregation/project/)
 

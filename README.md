@@ -1023,9 +1023,52 @@ location comes from our collection field, it is not a reserved word.
 </details>
 
 <details>
+<summary>Section 12: Aggregation Framework, Complex Transformations</summary>
+
+![aggregation framework](Section-12/1.jpg)
+You can use pipeline stages in `db.collection.aggregate` and `db.aggregate methods`.  
+
+**Pay attention**: aggregate use cursor, it will not loop up all your collection.
+To speed up it you can use indexes to search through indexes first and take their advantages.
+
+* To use multiline insert(leave your brackets open):  
+![aggregation framework](Section-12/2-aggregate-multiline.jpg)
+
+### Find stage using $match.
+example: `db.persons.aggregate([
+  {$match: {gender: "female"}},    
+ ])`
+ 
+
+### Group stage. Works like Group from SQL world.
+It allows you to group your data by a field or by multiple fields (for example group by location and state):  
+
+example: `db.persons.aggregate([
+  {$match: {gender: "female"}},    
+  {$group: { _id: { state: "$location.state" }, totalPersons: { $sum: 1 } }}   
+ ])`
+ 
+* as you might notice - syntax for _id field - we have never used it before. But for aggregation - it uses very often for _id field.
+* $ sum - is an accumulator function - returns you a count of documents with certain state.
+
+![aggregation framework](Section-12/3-aggregation.jpg)
+
+### Group with Sorting
+is you add sort stage before grouping - you will sort your data right after filtering. It's not what we are looking for.
+`db.persons.aggregate([
+  {$match: {gender: "female"}},    
+  {$group: { _id: { state: "$location.state" }, totalPersons: { $sum: 1 } }},
+  {$sort: { totalPersons: -1 } }
+ ])`
+ 
+![grouping](Section-12/4-aggregation-group-sorting.jpg)
+
+</details>
+
+<details>
 <summary>Section 13: Numeric Data</summary>
 
-![error](Section-13/1-numbers.jpg)
+![group and sorting](Section-13/1-numbers.jpg)
 
 ### Int32
 To insert a value of default type (float) into collection: `db.persons.insertOne({age: 29})`.  

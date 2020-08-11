@@ -1133,10 +1133,25 @@ If we do not specify fields on the first project but try to use on the second - 
 
 ![aggregation](Section-12/6-convert-geo.jpg)
 
-#### Converting Date
+#### Converting Date with $convert
 `db.persons.aggregate([
  { $project: { birthdate: { $convert: { input: "$dob.date", to: "date" } } }},
  { $project: { birthdate: 1 }}
+]).pretty()`
+
+#### Shortcuts
+You can use shortcuts for convertion operations. For example: `toDate()`.
+It can be useful if you don't worry about null values and exceptions.  
+`db.persons.aggregate([
+ { $project: { birthdate: { $toDate: "$dob.date" } } },
+ { $project: { birthdate: 1 }}
+]).pretty()`
+
+### $isoWeekYear operator
+Get the year from Date field
+`db.persons.aggregate([
+ { $project: { birthdate: { $toDate: "$dob.date" }}},
+ { $group: { _id: { birthYear: { $isoWeekYear: "$birthdate"} }, personsAmount: { $sum: 1 } } }
 ]).pretty()`
 
 other operators for $project: [project operators](https://docs.mongodb.com/manual/reference/operator/aggregation/project/)

@@ -1134,6 +1134,10 @@ If we do not specify fields on the first project but try to use on the second - 
 ![aggregation](Section-12/6-convert-geo.jpg)
 
 #### Converting Date
+`db.persons.aggregate([
+ { $project: { birthdate: { $convert: { input: "$dob.date", to: "date" } } }},
+ { $project: { birthdate: 1 }}
+]).pretty()`
 
 other operators for $project: [project operators](https://docs.mongodb.com/manual/reference/operator/aggregation/project/)
 

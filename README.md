@@ -1023,9 +1023,29 @@ location comes from our collection field, it is not a reserved word.
 </details>
 
 <details>
+<summary>Section 12: Aggregation Framework, Complex Transformations</summary>
+
+![aggregation framework](Section-12/1.jpg)
+You can use pipeline stages in `db.collection.aggregate` and `db.aggregate methods`.  
+
+**Pay attention**: aggregate use cursor, it will not loop up all your collection.
+To speed up it you can use indexes to search through indexes first and take their advantages.
+
+* To use multiline insert(leave your brackets open):  
+![aggregation framework](Section-12/2-aggregate-multiline.jpg)
+
+### Find stage using $match.
+example: `db.persons.aggregate([{$match: {gender: "female"}}])`
+
+### Group stage
+
+
+</details>
+
+<details>
 <summary>Section 13: Numeric Data</summary>
 
-![error](Section-13/1-numbers.jpg)
+![numeric data](Section-13/1-numbers.jpg)
 
 ### Int32
 To insert a value of default type (float) into collection: `db.persons.insertOne({age: 29})`.  

@@ -980,7 +980,7 @@ To check your weights and how it affets the final score:
 Structure:  
 `db.places.insertOne({name: "California Academy", location: { type: <GeoJSON type>, coordinates: <coordinates> }})`
 To add a GeoJSON location you have to write the next (For Point type):  
-`db.places.insertOne({name: "California Academy", location: { type: "Point", oordinates: [-122, 47] }})`
+`db.places.insertOne({name: "California Academy", location: { type: "Point", coordinates: [-122, 47] }})`
 
 ### Geo Query
 #### To find what is near to the next point:  
@@ -1019,5 +1019,41 @@ pay attention on 1/6378.1 - translation from kilometers to radians.
 to add an index:  
 `db.places.createIndex({location: "2dsphere"})` - 2dsphere is a special index format for geospatial data.
 location comes from our collection field, it is not a reserved word.
+
+</details>
+
+<details>
+<summary>Section 13: Numeric Data</summary>
+
+![error](Section-13/1-numbers.jpg)
+
+### Int32
+To insert a value of default type (float) into collection: `db.persons.insertOne({age: 29})`.  
+To insert a number: `db.persons.insertOne({age: NumberInt(29)})` or `db.persons.insertOne({age: NumberInt("29")})`
+It works in the shell. To use it in a driver - use provided capabilities.  
+
+To check: `db.persons.stats()` and check the size property (the second one).
+
+**Pay attention**: it you add a value which is out of range of Int32 - it will insert the possible maximum (and we don't get an error):  
+`db.company.insertOne({valuation: Number("500000000000")})` -> valuation will be 705032704
+
+### Int64
+To add Int64 value (also for shell): `db.company.insertOne({valuation: NumberLong(50000000000)})` or `db.company.insertOne({valuation: NumberLong("50000000000")})`.  
+To check: `db.persons.stats()` and check the size property (the second one).
+
+**Pay attention**: despite NumberInt behavious NumberLong raises an error if you reach the long value limit. But if you inserting it using string (with quotation marks) - it will store a maximum of possible values.
+
+Also, keep in mind that Javascript (shell behind the driver) - use string instead of real numbers. that's why it supports both types of inserting (with quotation marks and without them).
+
+### Converting from Numbers to default Float
+If you make any operations with your NumberInt \ NumberLong adding-subtracting default type value - mongodb with automatically converts your value into float (default format):
+`db.accounts.updateOne({}, {$inc: {amount: 10}})` - increase amount field by 10.
+
+### Double 128-bit
+Works quite well for 0 - 0.5 operations.
+`db.science.insertOne({value: NumberDecimal("0.3")})` - we should pass it as a string to avoid imprecision issues.
+
+### Monetary data
+[monetary data](https://docs.mongodb.com/manual/tutorial/model-monetary-data/)
 
 </details>

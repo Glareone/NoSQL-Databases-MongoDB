@@ -1031,6 +1031,8 @@ You can use pipeline stages in `db.collection.aggregate` and `db.aggregate metho
 **Pay attention**: aggregate use cursor, it will not loop up all your collection.
 To speed up it you can use indexes to search through indexes first and take their advantages.
 
+* You can use steps multiple times. For example you can use $project several times within aggregation.
+
 * To use multiline insert(leave your brackets open):  
 ![aggregation framework](Section-12/2-aggregate-multiline.jpg)
 
@@ -1062,6 +1064,139 @@ is you add sort stage before grouping - you will sort your data right after filt
  ])`
  
 ![grouping](Section-12/4-aggregation-group-sorting.jpg)
+
+### $Project stage. More powerful than projection.
+We can no only select which field should be included and which are not. We are also able to make new fields (take a look on fullName field):
+* $concat, $toUpper are used.
+* {$toUpper: {$substrCP: ["$name.first", 0, 1]}} - to uppercase the first char of the string derived from name.first field.
+
+`db.persons.aggregate([
+  {$project: { 
+            _id: 0,
+             gender: 1,
+             fullName: {$concat: ["Hello", "World", " ", "$name.first", {$toUpper: "$name.last"}, {$toUpper: {$substrCP: ["$name.first", 0, 1]}}] }}}
+ ])`
+ 
+Show the first name with first character in the uppercase mode for first name and the last name:  
+`db.persons.aggregate([
+     {
+       $project: {
+         _id: 0,
+         gender: 1,
+         fullName: {
+           $concat: [
+             { $toUpper: { $substrCP: ['$name.first', 0, 1] } },
+             {
+               $substrCP: [
+                 '$name.first',
+                 1,
+                 { $subtract: [{ $strLenCP: '$name.first' }, 1] }
+               ]
+             },
+             ' ',
+             { $toUpper: { $substrCP: ['$name.last', 0, 1] } },
+             {
+               $substrCP: [
+                 '$name.last',
+                 1,
+                 { $subtract: [{ $strLenCP: '$name.last' }, 1] }
+               ]
+             }
+           ]
+         }
+       }
+     }
+   ]).pretty();`
+
+### Project to geoJSON
+If you add a `name` field on the first $project step - you could use it on the second $project step.   
+For example, we create a location as a geoJSON object on the first step and just include it on the second.  
+If we do not specify fields on the first project but try to use on the second - they will just be omitted.  
+
+`db.persons.aggregate([
+  {$project: { name: 1, location: {type: "Point", coordinates: [ "$location.coordinates.longitude", "$location.coordinates.latitude" ] } } },
+  {$project: { _id: 0, name: 1, gender: 1, location: 1 }} 
+]).pretty()`
+
+![aggregation](Section-12/5-aggregation-geo.jpg)
+
+#### Converting geoJSON
+
+* If you noticed lat and long are strings. We have to convert it using $convert:  
+`db.persons.aggregate([
+  {$project: { name: 1, location: {type: "Point", coordinates: [
+                                                              { $convert: { input: "$location.coordinates.longitude", to: "double", onError: 0.0, onNull: 0.0 }},
+                                                              { $convert: { input: "$location.coordinates.latitude", to: "double", onError: 0.0, onNull: 0.0 }}
+                                                            ] } } },
+  {$project: { _id: 0, name: 1, gender: 1, location: 1 } } 
+]).pretty()`
+
+![aggregation](Section-12/6-convert-geo.jpg)
+
+#### Converting Date with $convert
+`db.persons.aggregate([
+ { $project: { birthdate: { $convert: { input: "$dob.date", to: "date" } } }},
+ { $project: { birthdate: 1 }}
+]).pretty()`
+
+#### Shortcuts
+You can use shortcuts for convertion operations. For example: `toDate()`.
+It can be useful if you don't worry about null values and exceptions.  
+`db.persons.aggregate([
+ { $project: { birthdate: { $toDate: "$dob.date" } } },
+ { $project: { birthdate: 1 }}
+]).pretty()`
+
+### $isoWeekYear operator
+Get the year from Date field
+`db.persons.aggregate([
+ { $project: { birthdate: { $toDate: "$dob.date" }}},
+ { $group: { _id: { birthYear: { $isoWeekYear: "$birthdate"} }, personsAmount: { $sum: 1 } } }
+]).pretty()`
+
+### Group vs Project
+![aggregation](Section-12/7-group-vs-project.jpg)
+
+### $unwind
+Using this aggregation operator you can easily get elements from arrays. Has 2 kind of syntax:
+`db.persons.aggregate([
+ { $unwind: "$hobbies" }
+]).pretty()`
+
+![unwind](Section-12/8-unwind.jpg)
+
+* We can bring them together using $group:
+`db.persons.aggregate([
+ { $unwind: "$hobbies" },
+ { $group: { _id: { age: "$age" }}, allHobbies: { $push: "$hobbies" } }
+]).pretty()`
+
+![unwind](Section-12/9-unwind-group.jpg)
+To avoid duplications: $addToSet.
+
+### $project with Arrays:
+You can use slice to arrays - to slice entire arrays on parts. You can use constants values here as well as variables.
+`db.persons.aggregate([
+ { $project: { _id: 0, examScore: { $slice: ["$examScores", 1] }}},
+]).pretty()`
+
+$slice: ["$examScores", 1] - will get first element from the array "examScores"
+![slice](Section-12/10-slice.jpg)
+
+$slice: ["$examScores", -2] - will get last 2 elements. (negative values - will start counting from the end of the array)
+
+$slice: ["$examScores", 2, 1] - will get 1 element starts from position 2.
+
+#### $filter for projection
+1) sc - temporary name (on your choice, in my case- shortcut of score) which could be used in projection
+2) cond - condition.  $gt - works a bit differ than in filtering.
+2.1) $gt: ["sc.score", 60] - sc.score variable greater than 60 (because every examScore element of the array - is a document)
+`db.persons.aggregate([
+ { $project: { _id: 0, examScore: { $filter: { input: "$examScores", as: "sc", cond: { $gt: ["sc", 60] } } }}},
+]).pretty()`
+
+
+other operators for $project: [project operators](https://docs.mongodb.com/manual/reference/operator/aggregation/project/)
 
 </details>
 

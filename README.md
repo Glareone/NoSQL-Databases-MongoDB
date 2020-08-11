@@ -1154,6 +1154,39 @@ Get the year from Date field
  { $group: { _id: { birthYear: { $isoWeekYear: "$birthdate"} }, personsAmount: { $sum: 1 } } }
 ]).pretty()`
 
+### Group vs Project
+![aggregation](Section-12/7-group-vs-project.jpg)
+
+### $unwind
+Using this aggregation operator you can easily get elements from arrays. Has 2 kind of syntax:
+`db.persons.aggregate([
+ { $unwind: "$hobbies" }
+]).pretty()`
+
+![unwind](Section-12/8-unwind.jpg)
+
+* We can bring them together using $group:
+`db.persons.aggregate([
+ { $unwind: "$hobbies" },
+ { $group: { _id: { age: "$age" }}, allHobbies: { $push: "$hobbies" } }
+]).pretty()`
+
+![unwind](Section-12/9-unwind-group.jpg)
+To avoid duplications: $addToSet.
+
+### $project with Arrays:
+You can use slice to arrays - to slice entire arrays on parts. You can use constants values here as well as variables.
+`db.persons.aggregate([
+ { $project: { _id: 0, examScore: { $slice: ["$examScores", 1] }}},
+]).pretty()`
+
+$slice: ["$examScores", 1] - will get first element from the array "examScores"
+![slice](Section-12/10-slice.jpg)
+
+$slice: ["$examScores", -2] - will get last 2 elements. (negative values - will start counting from the end of the array)
+
+$slice: ["$examScores", 2, 1] - will get 1 element starts from position 2.
+
 other operators for $project: [project operators](https://docs.mongodb.com/manual/reference/operator/aggregation/project/)
 
 </details>

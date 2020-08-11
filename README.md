@@ -1187,6 +1187,15 @@ $slice: ["$examScores", -2] - will get last 2 elements. (negative values - will 
 
 $slice: ["$examScores", 2, 1] - will get 1 element starts from position 2.
 
+#### $filter for projection
+1) sc - temporary name (on your choice, in my case- shortcut of score) which could be used in projection
+2) cond - condition.  $gt - works a bit differ than in filtering.
+2.1) $gt: ["sc.score", 60] - sc.score variable greater than 60 (because every examScore element of the array - is a document)
+`db.persons.aggregate([
+ { $project: { _id: 0, examScore: { $filter: { input: "$examScores", as: "sc", cond: { $gt: ["sc", 60] } } }}},
+]).pretty()`
+
+
 other operators for $project: [project operators](https://docs.mongodb.com/manual/reference/operator/aggregation/project/)
 
 </details>

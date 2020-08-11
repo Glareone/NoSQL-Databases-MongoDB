@@ -1057,3 +1057,21 @@ Works quite well for 0 - 0.5 operations.
 [monetary data](https://docs.mongodb.com/manual/tutorial/model-monetary-data/)
 
 </details>
+
+<details>
+<summary>Section 16: Transactions</summary>
+
+![transactions](Section-16/1-transactions.jpg)
+Transaction works along with sessions (next example works in Atlas and in shell):
+0) store the user inside "blog" collection, store posts inside "posts" collection.
+1) `const session = db.getMongo().startSession()` - create session
+2) `session.startTransaction()` - start session and transaction inside it
+3.1) `const usersCollection = session.getDatabases("blog").users`
+3.2) `const postsCollection = session.getDatabases("blog").posts`
+3.3) before making any operations we possibly need to get ObjectId of stored user using `db.users.find.pretty()` - it will go outside session.
+3.4) And now we can use our general operations inside session using our stored session collections : `usersCollection.deleteOne({_id: ObjectId("PUT HERE YOUR ID")})`
+3.5) if you check `db.users.find().pretty()` your collection - you will find your user here because transaction is not completed yet.
+3.6) `session.startTransaction()` - to start your transaction (and operations related to usersCollection and postsCollection).
+3.7) `session.commitTransaction()` - to commit your session with transaction, `session.abortTransaction()` - to abort your session.
+
+</details>

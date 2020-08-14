@@ -1265,6 +1265,19 @@ if you have no documents with age between >0 and <18 (and between >80 and <120) 
 
 **Pay Attention** The order here does matter (instead of ordering in find method) because aggregation executes step by step
 
+#### $out
+out allows you to send result into another collection (if you need to store them somewhere else or store + speed up next fetching):
+`db.persons.aggregate([
+ { $project: { birthdate: { $toDate: "$dob.date" }}},
+ { $group: { _id: { birthYear: { $isoWeekYear: "$birthdate"} }, personsAmount: { $sum: 1 } } }
+ { $limit: 10 }
+ { $skip: 10 }
+ { $out: "transformedData" }
+]).pretty()`
+
+Will send it into transformedData collection, and if it does not exist - will create it first. In this collection you can use indexes on the fields to find results faster.
+
+
 Mongo automatically optimizes your aggregation: [info](https://docs.mongodb.com/manual/core/aggregation-pipeline-optimization/)  
 Other operators for $project: [project operators](https://docs.mongodb.com/manual/reference/operator/aggregation/project/)  
 

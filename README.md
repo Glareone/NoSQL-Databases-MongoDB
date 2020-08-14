@@ -1253,7 +1253,20 @@ With BucketAuto mongo tries to derive groups with equal distribution (with equal
 
 if you have no documents with age between >0 and <18 (and between >80 and <120) - the bucket won't be created. That's because you see only 3 buckets instead of 5.
 
-other operators for $project: [project operators](https://docs.mongodb.com/manual/reference/operator/aggregation/project/)
+#### $limit, $skip
+1) Limiting your aggregation result set like TOP 10:
+2) $skip allows you to skip first 10 inserts. (OFFSET (@Skip) in SQL world)
+`db.persons.aggregate([
+ { $project: { birthdate: { $toDate: "$dob.date" }}},
+ { $group: { _id: { birthYear: { $isoWeekYear: "$birthdate"} }, personsAmount: { $sum: 1 } } }
+ { $limit: 10 }
+ { $skip: 10 }
+]).pretty()`
+
+**Pay Attention** The order here does matter (instead of ordering in find method) because aggregation executes step by step
+
+Mongo automatically optimizes your aggregation: [info](https://docs.mongodb.com/manual/core/aggregation-pipeline-optimization/)  
+Other operators for $project: [project operators](https://docs.mongodb.com/manual/reference/operator/aggregation/project/)  
 
 </details>
 

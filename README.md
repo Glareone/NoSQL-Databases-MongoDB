@@ -1277,6 +1277,22 @@ out allows you to send result into another collection (if you need to store them
 
 Will send it into transformedData collection, and if it does not exist - will create it first. In this collection you can use indexes on the fields to find results faster.
 
+#### #geoNear
+Allows you to use geoJSON data and geoJSON indexes:
+1) `db.transformedPersons.createIndex({ location: "2dsphere"})`
+2) num - allows you to limit your result set instead of using $limit due performance difference.
+3) query - allows you to filter by other things. Better to use query inside $geoNear than $match step, also because it works faster.
+4) distanceField - field which you can specify to store distance information (between declared point+coordinates and others points which is near than 10km(according maxDistance))
+
+`db.transformedPersons.aggregate([
+ { $geoNear: {
+     near: { type: "Point", coordinates: [-18.4, -42.8] },
+     maxDistance: 10000,
+     num: 10,
+     query: { age: {$gt: 30 } },
+     distanceField: "distance"
+ }}
+]).pretty()`
 
 Mongo automatically optimizes your aggregation: [info](https://docs.mongodb.com/manual/core/aggregation-pipeline-optimization/)  
 Other operators for $project: [project operators](https://docs.mongodb.com/manual/reference/operator/aggregation/project/)  

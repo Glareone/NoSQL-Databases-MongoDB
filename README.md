@@ -1,6 +1,5 @@
-# Introduction 
-This is a repo created for storing any useful information about MongoDB.
-
+# Basics
+ 
 <details>
 <summary>Section - 1: Introduction</summary>
 
@@ -166,6 +165,8 @@ By default it will send you objects with _id (because it is a default property) 
 To only name - `find({}, {name: 1, _id: 0})`/
 
 </details>
+
+# Data Structure, Schemas, Relations, Validation
 
 <details>
 <summary>Section - 2: Embedded Documents & Arrays</summary>
@@ -351,6 +352,8 @@ this code will succeed. You could see a warning in the log file.(next lecture).
 
 </details>
 
+# MongoDB Settings, Data Exploration, Data Visualization
+
 <details>
 <summary>Section 4: MongoDB Settings (As Process and Service), Configuring DB, Log Path</summary>
 
@@ -402,6 +405,8 @@ Additional features:
 ![features in compass](Section-5/2-tabs.jpg)
 
 </details>
+
+# MongoDB Operations
 
 <details>
 <summary>Section 6: CREATE operation, importing documents, additional information</summary>
@@ -786,6 +791,8 @@ It will scan all indexes for you and how they perform with your data with compar
 
 </details>
 
+# Indexes
+
 <details>
 <summary>Section 10: Indexes</summary>
 
@@ -935,12 +942,12 @@ You can use it to order you result set or find the best result for you:
 
 #### Drop text index
 You can't drop text index by field writing `db.products.dropIndex({title: "text"})`; It doesn't work.
-But you can drop it using indexname:
+But you can drop it using the index name:
 `dp.products.getIndexes()` and then get name from "name" field (i.e. "description_text")  
 `dp.products.dropIndex("description_text")`
 
 #### Combined Text indexes
-Its not possible to create several text indexes on one document! But we can merge several text field into one text index.  
+It's not possible to create several text indexes on one document! But we can merge several text field into one text index.  
 1) you have to drop your previous text index
 2) you can add a new one on multiple fields: `dp.products.createIndex({title: "text", description: "text"})`
 
@@ -970,6 +977,8 @@ To check your weights and how it affets the final score:
 
 
 </details>
+
+# Geospatial data, GeoJSON
 
 <details>
 <summary>Section 11: Geospatial Data</summary>
@@ -1335,6 +1344,22 @@ Works quite well for 0 - 0.5 operations.
 
 ### Monetary data
 [monetary data](https://docs.mongodb.com/manual/tutorial/model-monetary-data/)
+
+</details>
+
+# Security, Durability & Fault Tolerance, Performance
+
+<details>
+<summary>Section 14: Security</summary>
+
+![group and sorting](Section-14/1-intro.jpg)
+
+#### Role based Access Control
+
+</details>
+
+<details>
+<summary>Section 15: Fault Tolerance, Performance, Deployment</summary>
 
 </details>
 

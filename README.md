@@ -1297,6 +1297,9 @@ Allows you to use geoJSON data and geoJSON indexes:
 Mongo automatically optimizes your aggregation: [info](https://docs.mongodb.com/manual/core/aggregation-pipeline-optimization/)  
 Other operators for $project: [project operators](https://docs.mongodb.com/manual/reference/operator/aggregation/project/)  
 
+Module summary:
+![summary](Section-12/13-summary.jpg)
+
 </details>
 
 <details>

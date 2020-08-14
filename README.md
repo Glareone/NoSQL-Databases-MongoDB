@@ -1195,8 +1195,107 @@ $slice: ["$examScores", 2, 1] - will get 1 element starts from position 2.
  { $project: { _id: 0, examScore: { $filter: { input: "$examScores", as: "sc", cond: { $gt: ["sc", 60] } } }}},
 ]).pretty()`
 
+#### $bucket
+Allows you to output your data into the buckets where you can calculate summaries or statistics:  
+1) using boundaries you can categorize you data by these values.
+2) output - which fields should be presented: every document will have a field with $name.first value:
+2.1) names - is will be a collection of first names
+2.2) averageAge will contain avg year value respectively.
+2.3) numPersons will contain a count of element inside bucket.
+`db.persons.aggregate([
+ { $bucket: { 
+        groupBy: "$dob.age",
+        boundaries: [0, 18, 30, 50, 80, 120],
+        output: {
+            numPersons: { $sum: 1 },
+            averageAge: { $avg: "$dob.age" },
+            names: { $push: "$name.first" }
+        }
+   }
+ }
+]).pretty()`  
 
-other operators for $project: [project operators](https://docs.mongodb.com/manual/reference/operator/aggregation/project/)
+the result is:
+![bucket](Section-12/11-bucket.jpg)
+
+without names:
+`db.persons.aggregate([
+ { $bucket: { 
+        groupBy: "$dob.age",
+        boundaries: [0, 18, 30, 50, 80, 120],
+        output: {
+            numPersons: { $sum: 1 },
+            averageAge: { $avg: "$dob.age" },
+        }
+   }
+ }
+]).pretty()`  
+
+the result is:
+![bucket](Section-12/12-bucket-2.jpg)
+
+#### $bucketAuto
+Allows you to create automatically defined bucket groups.  
+1) buckets here is a count of buckets which you want to get. This field is optional.
+`db.persons.aggregate([
+ { $bucketAuto: { 
+        groupBy: "$dob.age",
+        buckets: 5,
+        output: {
+            numPersons: { $sum: 1 },
+            averageAge: { $avg: "$dob.age" },
+        }
+   }
+ }
+]).pretty()`  
+
+With BucketAuto mongo tries to derive groups with equal distribution (with equal amount of elements). That's why amount of elements in each group will be pretty close.
+
+if you have no documents with age between >0 and <18 (and between >80 and <120) - the bucket won't be created. That's because you see only 3 buckets instead of 5.
+
+#### $limit, $skip
+1) Limiting your aggregation result set like TOP 10:
+2) $skip allows you to skip first 10 inserts. (OFFSET (@Skip) in SQL world)
+`db.persons.aggregate([
+ { $project: { birthdate: { $toDate: "$dob.date" }}},
+ { $group: { _id: { birthYear: { $isoWeekYear: "$birthdate"} }, personsAmount: { $sum: 1 } } }
+ { $limit: 10 }
+ { $skip: 10 }
+]).pretty()`
+
+**Pay Attention** The order here does matter (instead of ordering in find method) because aggregation executes step by step
+
+#### $out
+out allows you to send result into another collection (if you need to store them somewhere else or store + speed up next fetching):
+`db.persons.aggregate([
+ { $project: { birthdate: { $toDate: "$dob.date" }}},
+ { $group: { _id: { birthYear: { $isoWeekYear: "$birthdate"} }, personsAmount: { $sum: 1 } } }
+ { $limit: 10 }
+ { $skip: 10 }
+ { $out: "transformedData" }
+]).pretty()`
+
+Will send it into transformedData collection, and if it does not exist - will create it first. In this collection you can use indexes on the fields to find results faster.
+
+#### #geoNear
+Allows you to use geoJSON data and geoJSON indexes:
+1) `db.transformedPersons.createIndex({ location: "2dsphere"})`
+2) num - allows you to limit your result set instead of using $limit due performance difference.
+3) query - allows you to filter by other things. Better to use query inside $geoNear than $match step, also because it works faster.
+4) distanceField - field which you can specify to store distance information (between declared point+coordinates and others points which is near than 10km(according maxDistance))
+
+`db.transformedPersons.aggregate([
+ { $geoNear: {
+     near: { type: "Point", coordinates: [-18.4, -42.8] },
+     maxDistance: 10000,
+     num: 10,
+     query: { age: {$gt: 30 } },
+     distanceField: "distance"
+ }}
+]).pretty()`
+
+Mongo automatically optimizes your aggregation: [info](https://docs.mongodb.com/manual/core/aggregation-pipeline-optimization/)  
+Other operators for $project: [project operators](https://docs.mongodb.com/manual/reference/operator/aggregation/project/)  
 
 </details>
 

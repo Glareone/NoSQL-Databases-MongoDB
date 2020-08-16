@@ -59,7 +59,7 @@ And now you are in the mongo shell where you can run your commands and queries.
 <summary>Section - 1: Simple commands</summary>
 
 * `show dbs` - will show existing dbs in selected repository (`--dbpath D:\mongodb-data\db`)
-* `use Your_db_name` - will switch to db with selected name. If db does not exist - it will create it automatically.
+* `use Your_db_name` - will switch to db with the selected name. If db does not exist - it will create it automatically.
 * `db.products.insertOne({name: "A Book", price: 29.99})` - will create a table named products (it does not exist too) 
 in db which we connected to and insert a document inside it.  
 Pay attention on non-existing quotation mark in "keys" - you can use key naming without quotations, they will be added
@@ -98,7 +98,7 @@ Greater than ($gt): `db.flight.find({distance: {$gt: 10000}}).pretty()`;
 FindOne: `db.flight.findOne({distance: {$gt: 10000}})`
 
 ### InsertMany and Show results using find. Cursor  
-Find does not show you all results, it shows you a cursor by default:  
+Find does not show you an entire result set, it shows you a cursor by default:  
 ![cursor](Section-2/11-insert-many.jpg)
 ![cursor](Section-2/12-find-cursor.jpg)
 
@@ -109,7 +109,7 @@ Find does not show you all results, it shows you a cursor by default:
 ### UpdateOne
 `db.flight.updateOne({distance: 12000}, {$set: {marker: "new field delete"}})` - will update first document which contains distance: 12000.  
 Pay attention on <b>$set</b> - all reserved words start from dollar sign. 
-This operator means that you would like to update your document with new field.
+This operator means that you are able to update your document and add a new field.
 
 ### UpdateMany
 `db.flight.updateMany({}, {$set: {marker: "to Delete!"}})` - empty curly braces `{}` mean all documents in collection.
@@ -417,7 +417,7 @@ Available methods:
 ### Insert
 * insert method also works, but not recommended.
 
-* For example after using `db.persons.insert({name: "Phil", age: 25})` you do now await that this new person has an Id, but it has.  
+* For example after using `db.persons.insert({name: "Phil", age: 25})` you do now await does this new person have an Id or not, but it has.  
 Unlike the insertOne method insert does not show you its new "_id". It could be a real disadvantage, because in real create
 operations you want to get an Id of just created object and then - immediately use it in your app (It's an extremely helpful in most cases).
 
@@ -704,13 +704,13 @@ To do that you have to pass second argument to `find`. First one is responsible 
 
 ##### Projection for arrays:
 
-1. `db.movies.find({"genres": "Drama"}, {"genres.$": 1})`  - This query means that we filtering every movie by genres which include "Drama" (genres is an array). But after that we tell mongo to fetch only first genre from the array.  
+1. `db.movies.find({"genres": "Drama"}, {"genres.$": 1})`  - This query means that we're filtering every movie by genres which include "Drama" (genres is an array). But after that we tell to mongo to fetch only first genre from the array.  
 ![cursors](Section-7/5-projection-for-arrays.jpg)
 Another example: 
 ![cursors](Section-7/6-projection-for-arrays-2.jpg)
 It looks a bit strange. Let me explain how it works. Technically "Horror" is a first matching element. Drama is lower. That's why after projection we see only him.
 
-2. `$elemMatch`. Sometimes your want to pull some items which are not you queried for. In such situation you can use $elemmatch. It also available for you in projection.  
+2. `$elemMatch`. Sometimes your want to pull some items which are not you queried for. In a such case you can use $elemmatch. It also available for you in projection.  
 `db.movies.find({"genres": "Drama"}, {genres: {$elemMatch: {$eq: "Horror"}}})` 
 ![cursors](Section-7/7-projection-for-arrays-3.jpg)
 You see empty field because "Horror" did not simply include into them.
@@ -757,8 +757,8 @@ To understand what mongoDB did and how it derived results for any commands (exce
 ![explain](Section-10/4-explain.jpg)
 ![explain](Section-10/8-explain-params.jpg)
 
-* Under `winning plan` you might notice stage: COLLSCAN. It means it looked throughtout entire collection to find a result set.
-* Also here is `rejectedPlans` - plan which were tried but they was worst than winning by performance.
+* Under `winning plan` you might notice stage: COLLSCAN. It means it looked throughout entire collection to find a result set.
+* Also here is `rejectedPlans` - plans which were tried, but they were worse than winning by performance.
 This property is an empty collection because of no plans except COLLSCAN to find all results in a current situation.
 
 Explain has a bunch of commands:
@@ -777,7 +777,7 @@ You will notice 'totalDocsExamined' will become 0. It will use the value "Max" d
 
 ### How mongoDB rejects the plan
 How exactly does mongodb figure out which plan is better?  
-1) Mongo does through indexes which could help you with your query. (for example if you have an index for 2 fields - should mongo use only first field from index or both)
+1) Mongo does through indexes which could help you with your query. (for example if you have an index for 2 fields - should mongo use only first field from an index or both)
 `db.persons.createIndex({"dob.age": 1, name: 1})`  
 `db.persons.find({name: 'Max', age: {$gt: 29}})`. One of the rejected plans will be the plan which uses only age field (it can't use a name field because name is not on the first place)
 MongoDb does the race for approaches between each other and tests which one can query 1000 documents first.  
@@ -786,7 +786,7 @@ MongoDb does the race for approaches between each other and tests which one can 
 Another options why mongodb will make the race again:
 ![explain](Section-10/11-update-plan-conditions.jpg)
 
-* To understand what plans had a race you have to call `db.persons.explain("allPlansExecution").find({name: 'Max', age: 29})`.  
+* To understand which plans had a race you have to call `db.persons.explain("allPlansExecution").find({name: 'Max', age: 29})`.  
 It will scan all indexes for you and how they perform with your data with comparisons how long they would take in different combinations or entirely without them.
 
 </details>
@@ -802,16 +802,16 @@ It will scan all indexes for you and how they perform with your data with compar
 
 ### 2 Ways how to create indexes
 ![indexes](Section-10/15-2ways-of-creating-indexes.jpg). 
-If you add you index in a foreground you locks your collection on writing. It's not able for production db. That's why you can use index creation in a background.
-1) To create it in a classic way (foreground) - `dp.yourcollection.createIndex({field: 1})`.  
+If you add your index in a foreground you lock your collection for writing. It's not suitable for production db. That's why you can use index creation in a background.
+1) To create it in a standard way (foreground) - `dp.yourcollection.createIndex({field: 1})`.  
 2) To create it in a background - `dp.yourcollection.createIndex({field: 1}, {background: true.})`
 
 ### Explain()
 To understand what mongoDB did and how it derived results for any commands (except insert) you can use `explain`:
 ![indexes](Section-10/4-explain.jpg)
 
-* Under `winning plan` you might notice stage: COLLSCAN. It means it looked throughtout entire collection to find a result set.
-* Also here is `rejectedPlans` - plan which were tried but they was worst than winning by performance.
+* Under `winning plan` you might notice stage: COLLSCAN. It means it looked throughout entire collection to find a result set.
+* Also here is `rejectedPlans` - plans which were tried, but they were worse than winning by performance.
 This property is an empty collection because of no plans except COLLSCAN to find all results in a current situation.
 
 Explain has a bunch of commands:
@@ -865,7 +865,7 @@ Obviously this index would be helpful when you're using filter by age and gender
 2) For `gender` alone it does not work.
 
 ### Indexes for Sorting
-For ordering Mongodb uses only 42MB of internal storage (for fetched documents) and if you don't use indexes you can face with timeout (when too much data to sort and it's not possible for mongo).
+For ordering Mongodb uses only 42MB of internal storage (for fetched documents) and if you don't use indexes you can face with a timeout (when too much data for sorting, and mongo can't perform this action ).
 That's why you need indexes not only to speed up your queries but also be able to make such query.
 
 ### Unique Index
@@ -877,10 +877,10 @@ If you apply an index on your age field - your index would be unnecessary big. I
 Partial indexes are drastically smaller and could be useful in some cases (for example, when you are looking persons only older than 60).  
 In this situation you can apply a partial index:  
 1) `db.persons.createIndex({"dob.age": 1}, {partialFilterExpression: {"dob.age": {$gt: 60} }})` - if your case just to filter all persons older than 60.  
-2) `db.persons.createIndex({"dob.age": 1}, {partialFilterExpression: {gender: "male"}})` - but if you are filtering also by male gender. -- This index will apply only for documents with gender "male". 
+2) `db.persons.createIndex({"dob.age": 1}, {partialFilterExpression: {gender: "male"}})` - but if you are filtering also by a male gender. -- This index will apply only for documents with a gender "male". 
 
 **Be aware of the second index**  
-What do i mean? I mean if you apply such index but you use the next query: `db.persons.find({"dob.age": {$gt: 60}})` - mongo will decide that's its too risky too use index with gender because you do not use gender in filtering explicitly.  
+What do i mean? I mean if you apply such index but you use the next query: `db.persons.find({"dob.age": {$gt: 60}})` - mongo will decide that it's too risky to use index with a gender because you do not use gender in filtering explicitly.  
 To call it properly and use your recently created index: `db.persons.find({"dob.age": {$gt: 60}, gender: "male"})`.
 
 To control what's going on and why - use `explain()`.

@@ -1352,9 +1352,55 @@ Works quite well for 0 - 0.5 operations.
 <details>
 <summary>Section 14: Security</summary>
 
-![group and sorting](Section-14/1-intro.jpg)
+![intro](Section-14/1-intro.jpg)
 
 #### Role based Access Control
+![role_privileges](Section-14/2-role-privileges.jpg)
+![role_privileges](Section-14/3-roles.jpg)
+
+#### Creating and Editing Users
+* The User is attached to the database. It means that user can easily have several roles to the different databases.  
+This rule does not limit the access to the "authentication database", because you obviously have to use it to authenticate credentials.
+![role_privileges](Section-14/4-create-update-user.jpg)
+
+##### Example of creating user
+1) First you have to start your mongod server using new `--auth` parameter: `mongod --dbpath "mongodb-data" --auth`
+2) You can start mongo process in a new terminal but on a bit different manner and with two options:
+2.1) just using `mongo` and it allows you to start working with mongo. But the next command should be `db.auth('your_name', 'your_password')`
+2.2) on the other hand you might use `mongo -u` with -u + -p OR --username and --password parameter. You can't use this approach if you haven't created a user so far. You have to use a 2.1 way.
+
+2.1 Approach from localhost will allow you to create one user on the very first step:
+* `use admin` to switch to admin database
+* `db.createUser({user: 'Alex', pwd: 'your_password', roles: ['userAdminAnyDatabase']})` - you must add at least one role.  
+userAdminAnyDatabase role is a built-in role provided by mongo for superadmins.
+
+PS To create a user for your database you have to type `use your-target-db` command, and after that create a user related to this db.
+
+##### Use your user
+After user creation you can use `db.auth('Alex', 'your_password')` command to authenticate.
+Finally then you can use you user with your roles and permissions (current 'Alex' user is able to do anything, obviously).
+
+#### Built-in Roles
+![role_privileges](Section-14/5-built-in-roles.jpg)
+
+#### Keep creating users and assigning them privileges
+`mongo -u alex -p password --authenticationDatabase admin` to authenticate to admin db.  
+`use shop` - switch to another db (in current example - shop, the db which we would like to use by our next `appdev` user)
+1. `db.createUser({user: 'appdev', pwd: 'password1', roles: ['readWrite']})` - a user with readWrite role only for that database.  
+2. `db.createUser(
+     {
+       user: "appdev",
+       pwd: "password1",
+       roles: [ { role: "readWrite", db: "test" },
+                { role: "read", db: "reporting" } ]
+     })` - also works.
+
+Before making authentication by the new user - make a logout by the previous. Without that you will use both users and their roles simultaneously.
+`db.logout()` to logout from admin.
+`db.auth('appdev', 'password1')` OR restart your mongo (works, logout did not help me) and connect again with new credentials: `mongo -u appdev -p password1 -authenticationDatabase shop`
+
+**PAY ATTENTION** If you face that you are still able to make any operations with any user: use next steps: [stackoverflow](https://stackoverflow.com/questions/41615574/mongodb-server-has-startup-warnings-access-control-is-not-enabled-for-the-dat)  
+Especially pay attention on --port parameter. Just use another port!
 
 </details>
 

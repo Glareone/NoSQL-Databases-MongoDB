@@ -1380,3 +1380,9 @@ Transaction works along with sessions (next example works in Atlas and in shell)
 3.7) `session.commitTransaction()` - to commit your session with transaction, `session.abortTransaction()` - to abort your session.
 
 </details>
+
+<details>
+<summary>Section 17: From Shell to Driver</summary>
+
+![intro](Section-17/1-intro.png)
+</details>

@@ -1352,9 +1352,11 @@ Works quite well for 0 - 0.5 operations.
 <details>
 <summary>Section 14: Security</summary>
 
-![group and sorting](Section-14/1-intro.jpg)
+![intro](Section-14/1-intro.jpg)
 
 #### Role based Access Control
+![role_privileges](Section-14/2-role-privileges.jpg)
+![role_privileges](Section-14/3-roles.jpg)
 
 </details>
 

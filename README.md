@@ -1380,3 +1380,20 @@ Transaction works along with sessions (next example works in Atlas and in shell)
 3.7) `session.commitTransaction()` - to commit your session with transaction, `session.abortTransaction()` - to abort your session.
 
 </details>
+
+<details>
+<summary>Section 17: From Shell to Driver, Connect NodeJS to MongoDb.Atlas</summary>
+
+![intro](Section-17/1-intro.png)
+
+#### To make connection between MongoDb.Atlas
+![connect](Section-17/2-connect-to-atlas.jpg)
+![connect](Section-17/3-connect.png)
+![connect](Section-17/4-connect.png)
+![connect](Section-17/5-dedicated-user.png)
+
+and then you can easily use: 
+1) `const mongoDb = require('mongodb').MongoClient` 
+2) `mongoDb.connect('YOUR CONNECTION STRING PROVIDED BY ATLAS + PASSWORD').then(client => { }).catch()`
+
+</details>

@@ -1374,8 +1374,33 @@ This rule does not limit the access to the "authentication database", because yo
 * `db.createUser({user: 'Alex', pwd: 'your_password', roles: ['userAdminAnyDatabase']})` - you must add at least one role.  
 userAdminAnyDatabase role is a built-in role provided by mongo for superadmins.
 
+PS To create a user for your database you have to type `use your-target-db` command, and after that create a user related to this db.
+
 ##### Use your user
-After user creation you can use `db.auth('Alex', 'your_password')` command.
+After user creation you can use `db.auth('Alex', 'your_password')` command to authenticate.
+Finally then you can use you user with your roles and permissions (current 'Alex' user is able to do anything, obviously).
+
+#### Built-in Roles
+![role_privileges](Section-14/5-built-in-roles.jpg)
+
+#### Keep creating users and assigning them privileges
+`mongo -u alex -p password --authenticationDatabase admin` to authenticate to admin db.  
+`use shop` - switch to another db (in current example - shop, the db which we would like to use by our next `appdev` user)
+1. `db.createUser({user: 'appdev', pwd: 'password1', roles: ['readWrite']})` - a user with readWrite role only for that database.  
+2. `db.createUser(
+     {
+       user: "appdev",
+       pwd: "password1",
+       roles: [ { role: "readWrite", db: "test" },
+                { role: "read", db: "reporting" } ]
+     })` - also works.
+
+Before making authentication by the new user - make a logout by the previous. Without that you will use both users and their roles simultaneously.
+`db.logout()` to logout from admin.
+`db.auth('appdev', 'password1')` OR restart your mongo (works, logout did not help me) and connect again with new credentials: `mongo -u appdev -p password1 -authenticationDatabase shop`
+
+**PAY ATTENTION** If you face that you are still able to make any operations with any user: use next steps: [stackoverflow](https://stackoverflow.com/questions/41615574/mongodb-server-has-startup-warnings-access-control-is-not-enabled-for-the-dat)  
+Especially pay attention on --port parameter. Just use another port!
 
 </details>
 

@@ -1358,6 +1358,25 @@ Works quite well for 0 - 0.5 operations.
 ![role_privileges](Section-14/2-role-privileges.jpg)
 ![role_privileges](Section-14/3-roles.jpg)
 
+#### Creating and Editing Users
+* The User is attached to the database. It means that user can easily have several roles to the different databases.  
+This rule does not limit the access to the "authentication database", because you obviously have to use it to authenticate credentials.
+![role_privileges](Section-14/4-create-update-user.jpg)
+
+##### Example of creating user
+1) First you have to start your mongod server using new `--auth` parameter: `mongod --dbpath "mongodb-data" --auth`
+2) You can start mongo process in a new terminal but on a bit different manner and with two options:
+2.1) just using `mongo` and it allows you to start working with mongo. But the next command should be `db.auth('your_name', 'your_password')`
+2.2) on the other hand you might use `mongo -u` with -u + -p OR --username and --password parameter. You can't use this approach if you haven't created a user so far. You have to use a 2.1 way.
+
+2.1 Approach from localhost will allow you to create one user on the very first step:
+* `use admin` to switch to admin database
+* `db.createUser({user: 'Alex', pwd: 'your_password', roles: ['userAdminAnyDatabase']})` - you must add at least one role.  
+userAdminAnyDatabase role is a built-in role provided by mongo for superadmins.
+
+##### Use your user
+After user creation you can use `db.auth('Alex', 'your_password')` command.
+
 </details>
 
 <details>

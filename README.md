@@ -1454,6 +1454,20 @@ Can be created only explicitly.
 * max - max amount of documents stored in collection
 * size - max collection size in bytes.
 
+#### Replica Sets, Fault Tolerance
+![replicasets](Section-15/3-replica-sets.jpg)
+![replicasets](Section-15/4-replica-sets.jpg)
+![replicasets](Section-15/5-replica-improvements.jpg)
+You also can use replicas to improve read speed:  
+![replicasets](Section-15/6-read-from%20-multiple-replicas.jpg)
+
+#### Sharding. Horizontal Scaling
+![sharding](Section-15/7-sharding.jpg)
+![sharding](Section-15/8-sharding-2.jpg)
+![sharding](Section-15/9-without-shard-key.jpg)
+![sharding](Section-15/10-with-shard-keys.jpg)
+
+
 </details>
 
 <details>

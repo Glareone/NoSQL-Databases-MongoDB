@@ -1416,6 +1416,29 @@ you can update password or replace roles with new roles.
 2) And you have to switch to admin db. `use admin` or to db where such user exists.
 3) login `db.auth('admin','pswd')`
 
+#### Transport Encryption, SSL\TLS
+1) You have to use OpenSSL: openssl command in linux or OpenSSL binaries distributed for Windows as well.  
+[stackoverflow](https://docs.mongodb.com/manual/tutorial/configure-ssl/)
+
+Creating RSA key-pair.
+![transactions](Section-14/6-ssl.jpg)
+
+2) Compose into one file (on linux you `can` use cat command (also described in a documentation))
+Unix: `cat mongodb-cert.key mongodb-cert.crt > mongodb.pem`
+Windows: `type mongodb-cert.key mongodb-cert.crt > mongodb.pem`
+
+3) Start mongod with enabled SSL
+* --sslMode (allowSSL | preferSSL | requireSSL . Our choice)
+* --sslPEMKeyFile ( to use your PEM file, our choice)
+* --sslCAFile (to use Certificate Authority, official authority who distributed such certificate. Extra layer of security. Could be used together with --sslPEMKeyFile option)
+`mongod --sslMode requireSSL --sslPEMKEYFile mongodb.pem` (or specify the full path to your file)
+
+4) Connect your mongo to mongod server
+* --ssl
+* --sslCAFile
+* --host localhost - required because otherwise it will try to connect to 127.0.0.1. Technically, it's not the same as `localhost` and it will not work.
+`mongo --ssl --sslCAFile mongodb.pem --host localhost`
+
 </details>
 
 <details>

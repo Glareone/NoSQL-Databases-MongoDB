@@ -1402,6 +1402,17 @@ Before making authentication by the new user - make a logout by the previous. Wi
 **PAY ATTENTION** If you face that you are still able to make any operations with any user: use next steps: [stackoverflow](https://stackoverflow.com/questions/41615574/mongodb-server-has-startup-warnings-access-control-is-not-enabled-for-the-dat)  
 Especially pay attention on --port parameter. Just use another port!
 
+#### Update user and roles
+you can update password or replace roles with new roles.
+`db.updateUser("appdev", {roles: ["readWrite", {role: "readWrite", db: "blog"}]})`
+* 1st "readWrite" - role for db which user registered in.
+* 2nd - add role for another db (named blod).
+
+**Pay Attention**
+1) To do that - your current user have to have permissions to change roles for other users: `db.logout()`
+2) And you have to switch to admin db. `use admin` or to db where such user exists.
+3) login `db.auth('admin','pswd')`
+
 </details>
 
 <details>

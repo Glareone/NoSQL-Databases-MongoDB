@@ -1442,7 +1442,17 @@ Windows: `type mongodb-cert.key mongodb-cert.crt > mongodb.pem`
 </details>
 
 <details>
-<summary>Section 15: Fault Tolerance, Performance, Deployment</summary>
+<summary>Section 15: Fault Tolerance, Performance, Deployment, Capped collection</summary>
+
+![intro](Section-15/1-intro.jpg)
+![influence](Section-15/2-influences.jpg)
+
+#### Capped collection
+This is a special collection type where you can limit the db size. When the limit has been reached - the old data will be replaced with new.  
+Can be created only explicitly.  
+`db.createCollection('yourcappedCollection', {capped: true, size: 10000, max: 3})` 
+* max - max amount of documents stored in collection
+* size - max collection size in bytes.
 
 </details>
 

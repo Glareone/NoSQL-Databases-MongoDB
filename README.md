@@ -1442,7 +1442,31 @@ Windows: `type mongodb-cert.key mongodb-cert.crt > mongodb.pem`
 </details>
 
 <details>
-<summary>Section 15: Fault Tolerance, Performance, Deployment</summary>
+<summary>Section 15: Fault Tolerance, Performance, Deployment, Capped collection</summary>
+
+![intro](Section-15/1-intro.jpg)
+![influence](Section-15/2-influences.jpg)
+
+#### Capped collection
+This is a special collection type where you can limit the db size. When the limit has been reached - the old data will be replaced with new.  
+Can be created only explicitly.  
+`db.createCollection('yourcappedCollection', {capped: true, size: 10000, max: 3})` 
+* max - max amount of documents stored in collection
+* size - max collection size in bytes.
+
+#### Replica Sets, Fault Tolerance
+![replicasets](Section-15/3-replica-sets.jpg)
+![replicasets](Section-15/4-replica-sets.jpg)
+![replicasets](Section-15/5-replica-improvements.jpg)
+You also can use replicas to improve read speed:  
+![replicasets](Section-15/6-read-from%20-multiple-replicas.jpg)
+
+#### Sharding. Horizontal Scaling
+![sharding](Section-15/7-sharding.jpg)
+![sharding](Section-15/8-sharding-2.jpg)
+![sharding](Section-15/9-without-shard-key.jpg)
+![sharding](Section-15/10-with-shard-keys.jpg)
+
 
 </details>
 

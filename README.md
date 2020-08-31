@@ -1363,22 +1363,23 @@ Works quite well for 0 - 0.5 operations.
 This rule does not limit the access to the "authentication database", because you obviously have to use it to authenticate credentials.
 ![role_privileges](Section-14/4-create-update-user.jpg)
 
-##### Example of creating user
+##### Example how to create first mongo user
 1) First you have to start your mongod server using new `--auth` parameter: `mongod --dbpath "mongodb-data" --auth`
 2) You can start mongo process in a new terminal but on a bit different manner and with two options:
-2.1) just using `mongo` and it allows you to start working with mongo. But the next command should be `db.auth('your_name', 'your_password')`
-2.2) on the other hand you might use `mongo -u` with -u + -p OR --username and --password parameter. You can't use this approach if you haven't created a user so far. You have to use a 2.1 way.
-
-2.1 Approach from localhost will allow you to create one user on the very first step:
+2.1) just using `mongo` and it allows you to start working with mongo.
+2.2) Approach which works while you and your db within localhost - will allow you to create one user on the very first step:
 * `use admin` to switch to admin database
 * `db.createUser({user: 'Alex', pwd: 'your_password', roles: ['userAdminAnyDatabase']})` - you must add at least one role.  
 userAdminAnyDatabase role is a built-in role provided by mongo for superadmins.
+
+2.3) After creating the first user we have to authenticate using his credentials `db.auth('your_name', 'your_password')`
 
 PS To create a user for your database you have to type `use your-target-db` command, and after that create a user related to this db.
 
 ##### Use your user
 After user creation you can use `db.auth('Alex', 'your_password')` command to authenticate.
-Finally then you can use you user with your roles and permissions (current 'Alex' user is able to do anything, obviously).
+Finally, you can use your user with your roles and permissions (current 'Alex' user is able to do anything, obviously).
+Obviously, you can create another users after that (because `Alex` has `userAdminAnyDatabase` role)
 
 #### Built-in Roles
 ![role_privileges](Section-14/5-built-in-roles.jpg)
@@ -1399,8 +1400,10 @@ Before making authentication by the new user - make a logout by the previous. Wi
 `db.logout()` to logout from admin.
 `db.auth('appdev', 'password1')` OR restart your mongo (works, logout did not help me) and connect again with new credentials: `mongo -u appdev -p password1 -authenticationDatabase shop`
 
-**PAY ATTENTION** If you face that you are still able to make any operations with any user: use next steps: [stackoverflow](https://stackoverflow.com/questions/41615574/mongodb-server-has-startup-warnings-access-control-is-not-enabled-for-the-dat)  
-Especially pay attention on --port parameter. Just use another port!
+##### Tips
+**PAY ATTENTION** If you face that you are still able to make any operations with any user: use next steps:
+[stackoverflow](https://stackoverflow.com/questions/41615574/mongodb-server-has-startup-warnings-access-control-is-not-enabled-for-the-dat)  
+Especially pay attention on `--port` parameter. Just use another port!
 
 #### Update user and roles
 you can update password or replace roles with new roles.

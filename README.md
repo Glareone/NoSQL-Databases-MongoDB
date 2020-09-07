@@ -724,10 +724,49 @@ With slice operator you can use array form:
 </details>
 
 <details>
-<summary>Section 9: Update Operation</summary>
+<summary>Section 8: Update Operation</summary>
 
 ![update](Section-8/1-intro.jpg)
-#### Updating fields using "updateOne()", "updateMany()" and $set.
+
+all update operators could be found here: [mongodb official documentation](https://docs.mongodb.com/manual/reference/operator/update/)
+#### Updating fields using "updateOne()"
+`db.persons.updateOne({ _id: ObjectId('your_id')}, {$set: { hobbies: [{ title: "Sports", frequency: 5}] }})` -- will completely override hobbies array.
+
+**TIPS** if you make this change several times - data will be written only once, at the first time because it compares what your field exactly stores and what you really want to write to this field.  
+If your field stores similar information which you would like to save - mongodb will ignore such operation.  
+You can confirm this checking the "modifiedCount" field after operation. If it is 0 - no changes were in db, operation was ignored.
+
+#### "updateMany()" and $set.
+`db.users.updateMany.({ "hobbies.title": "Sports"}, { $set: { isSporty: true } })`
+
+#### $set for updating multiple fields
+1) you can use $set with an entire object (ONLY FOR MongoDB DRIVERS):
+`$set: updateObject` - take a look the example in section-17.
+
+2) `{ $set: { isSporty: true, phone: '123123-123-123' } }`
+
+3) `db.users.updateOne({name: "Alex"}, { $inc: {}, $set: {}})` - several operations within one updateOne.
+But you can't modify one field twice. 
+
+#### Incrementing & Decrementing
+1) `db.users.updateOne({name: "Alex"}, { $inc: {age: 2}})` - increment age on 2.
+2) `db.users.updateOne({name: "Alex"}, { $inc: {age: -2}})` - increment age on -2.
+
+#### $min, $max, $mul
+`db.users.updateOne({name: "Alex"}, { $min: {age: 35}})` - will update the field with new value '35' if the current value is less than 35. (in other words - it updates it if the value is HIGHER)  
+same situation for $max:
+`db.users.updateOne({name: "Alex"}, { $max: {age: 40}})` - will update this field if this value is higher than 40. (in other words - it updates it if the value is LOWER)
+
+$mul will multiply your value:
+`db.users.updateOne({name: "Alex"}, { $mmul: {age: 1.5}})` - will multiply it in 1.5 times. 
+
+#### Delete\Drop fields, $unset
+`db.users.updateMany.({ "hobbies.title": "Sports"}, { $unset: { isSporty: "" } })` - the value ("") is totally up to you. Could be null as well. This value will be ignored.
+
+#### rename $rename
+will rename the field: `$rename: {fieldName: 'newNameForField'}`
+
+
 
 </details>
 
@@ -1545,5 +1584,19 @@ use skip and limit:
  .limit(pageSize)
  .forEach(productDoc => { products.push(productDoc); })
  .then(result => { res.status(200).json(products); })`
+
+</details>
+
+<details>
+<summary>Section 18: Stitch. Serverless Platform</summary>
+
+![stitch](Section-18/1-intro.jpg)
+
+You can run and work with Stitch right from Atlas by clicking "Stitch Apps".  
+Stitch uses AWS services under the hood. For example, it uses S3 as a file storage under the hood.  
+BTW you can integrate other AWS services to your Stitch.  
+
+### How to use
+to use it in your application you have to instell `mongodb-stitch-browser-sdk`.
 
 </details>

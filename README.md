@@ -1467,6 +1467,14 @@ You also can use replicas to improve read speed:
 ![sharding](Section-15/9-without-shard-key.jpg)
 ![sharding](Section-15/10-with-shard-keys.jpg)
 
+#### Connect to Atlas Cluster
+![connect](Section-17/2-connect-to-atlas.jpg)
+![connect](Section-15/11-connect-to-atlas.jpg)
+![connect](Section-15/12-connect.jpg)
+![connect](Section-15/13-connect.jpg)
+
+`/test` in url on the last picture - is a default database. You have to replace it with your previously created db name:  
+`mongo "mongodb+srv://cluster-0-ntrwp.mongodb.net/products" --username glareone`
 
 </details>
 
@@ -1502,5 +1510,40 @@ Transaction works along with sessions (next example works in Atlas and in shell)
 and then you can easily use: 
 1) `const mongoDb = require('mongodb').MongoClient` 
 2) `mongoDb.connect('YOUR CONNECTION STRING PROVIDED BY ATLAS + PASSWORD').then(client => { }).catch()`
+
+#### To store information using REST
+1) create a new document: `const newProduct = { name: "something", price: mongodb.Decimal128.fromString("100.5")}` -- parse from string to Decimal to store decimal instead of string or float.
+2) `mongodb.connect('mongodb+srv://alex:YOUR_LINK.net/shop?retryWrites=true')
+.then(client => { client.db().collection("products").insertOne(newProduct).then(client => client.close()})` - we have to create "products" collection first.
+3) don't forget to close your client after operations with db.
+
+#### Get information from mongodb using nodejs
+1) create const prop: `const products = [];`
+2) call `mongodb.connect('mongodb+srv://alex:YOUR_LINK.net/shop?retryWrites=true')
+.find().forEach(productDoc => products.push(productDoc).then(client => client.close())` --forEach could be called after `cursor` (find returns a cursor).
+
+#### Find by Id
+1) const ObjectId = require('mongodb').ObjectId;
+2) `router.get('/:id', (req, res, next) => {
+    mongodb.connect('mongodb+srv://alex:YOUR_LINK.net/shop?retryWrites=true')
+        .findOne({ _id: new ObjectId(req.params.id)})
+        .then(productDoc => { res.status(200).json(productDOc)})
+})`
+
+#### UpdateOne
+1) `const updatedProduct = { name: 'changed name' }`
+2) `.updateOne(
+{ _id: new ObjectId(req.params.id)},
+{ $set: updatedProduct })`
+
+#### Pagination
+use skip and limit:
+`mongodb.connect('mongodb+srv://alex:YOUR_LINK.net/shop?retryWrites=true')
+ .find()
+ .sort({ price: -1 })
+ .skip((queryPage - 1) * pageSize)
+ .limit(pageSize)
+ .forEach(productDoc => { products.push(productDoc); })
+ .then(result => { res.status(200).json(products); })`
 
 </details>

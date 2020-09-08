@@ -766,8 +766,38 @@ $mul will multiply your value:
 #### rename $rename
 will rename the field: `$rename: {fieldName: 'newNameForField'}`
 
+#### $upsert - create if the value if it was not found
+`db.users.updateOne({name: "Maria"}, { $set: {age: 22, hobbies: [{ title: 'Food', frequency: 5 }] }}, {upsert: true})`
+**Tips** This doc will contain Maria as a name and other fields described under $set section.  
+Mongodb decided that the filter fields must be a part of a new document.
 
+## Work with Arrays
+To add a field to every field in Array which match to your filter:
+`db.users.updateMany({'hobbies.frequency': {$gt: 2}}, {$set: {'hobbies.$.goodFrequency': true}})` - will create a new field 'goodFrequency' for every matched element with frequency greater than 2.
 
+#### Update ALL FIELDS IN THE ARRAY with $[]:
+`db.users.updateMany({'hobbies.frequency': {$gt: 2}}, {$inc: {'hobbies.$[].frequency': 3}})` - increment frequency field in all array elements for every document which is matched to filter.
+
+#### Update Particular FIELD IN THE ARRAY with $[el] and arrayFilters:
+
+`db.users.updateMany(
+    {'hobbies.frequency': {$gt: 2}},  
+    {$set: {'hobbies.$[el].goodFrequency': true}},  
+    { arrayFilters: [{"el.frequency": {$gt: 2}}]})` -
+**Tips** You can name `el` differently. el is an embedded document within array of hobbies.
+
+#### Adding a new element to Array using $push, $each
+* To add one element to array: `db.users.updateOne({name: "Maria"}, { $push: {hobbies: { title: 'New Hobbie', frequency: 1 } }})`  
+* To add several elements: `db.users.updateOne(
+    {name: "Maria"},
+    { $push: {hobbies: {$each: [{title: 'New Hobbie', frequency: 1},
+    {title: 'New Hobbie 2', frequency: 2}] } }})`  
+    
+**Tips** With such operations you can eaily use $slice, $sort and so on. 
+
+#### Remove elements from the Array $pull, $pop:
+* To add one element to array: `db.users.updateOne({name: "Maria"}, { $push: {hobbies: { title: 'Good Wine' } }})` - will delete element with this name from the arrays of documents.
+* To remove the last element from the array - use $pop: `db.users.updateOne({name: "Maria"}, { $pop: {hobbies: 1 }})` - first element. with `-1` will delete the last item of the array.
 </details>
 
 <details>

@@ -1,3 +1,7 @@
+# NoSql (Mongo\Redis) vs SQL
+![image](https://user-images.githubusercontent.com/4239376/193664749-52914404-c0a0-4a5b-a566-7a20ae5eba29.png)
+
+
 # Basics
  
 <details>

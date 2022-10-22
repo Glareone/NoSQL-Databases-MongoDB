@@ -1,6 +1,8 @@
 # NoSql (Mongo\Redis) vs SQL
 ![image](https://user-images.githubusercontent.com/4239376/193664749-52914404-c0a0-4a5b-a566-7a20ae5eba29.png)
 
+# CAP Theorem
+![image](https://user-images.githubusercontent.com/4239376/197360738-bf45bf11-c4ff-40ac-b54c-6b2975438efe.png)
 
 # Basics
  

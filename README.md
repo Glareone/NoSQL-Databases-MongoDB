@@ -4,8 +4,11 @@
 # CAP Theorem
 ![image](https://user-images.githubusercontent.com/4239376/197360738-bf45bf11-c4ff-40ac-b54c-6b2975438efe.png)
 
-# Basics
- 
+# Extra materials. DynamoDB. CosmosDB
+Quering AWS DynamoDB in .NET (Rahul Nath) https://www.rahulpnath.com/blog/dynamodb-querying-dotnet/
+
+# MongoDB Basics
+
 <details>
 <summary>Section - 1: Introduction</summary>
 

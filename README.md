@@ -7,6 +7,19 @@
 # Extra materials. DynamoDB. CosmosDB
 Quering AWS DynamoDB in .NET (Rahul Nath) https://www.rahulpnath.com/blog/dynamodb-querying-dotnet/
 
+# ACID & BASE in MongoDB
+MongoDB is ACID-compilant at the document level (per ONE document). MongoDB does not support multi-collection (table) transactions. 
+Atomic modifiers in MongoDB can only work against a single document.  
+
+(ACID. Official MongoDB doc)[https://www.mongodb.com/basics/acid-transactions]  
+Also good article: https://www.enterpriseintegrationpatterns.com/ramblings/18_starbucks.html  
+
+# SQL vs NoSql vs Hybrid real-world use cases.
+![image](https://github.com/Glareone/MongoDB-NoSQL/assets/4239376/c98902eb-8aa5-45ca-bf80-ba727391d124)
+![image](https://github.com/Glareone/MongoDB-NoSQL/assets/4239376/46001abf-2e41-4e3b-a9c6-1119723b05cd)
+![image](https://github.com/Glareone/MongoDB-NoSQL/assets/4239376/696dd97f-adfb-4702-b4ce-42a677f0c77e)
+
+
 # MongoDB Basics
 
 <details>

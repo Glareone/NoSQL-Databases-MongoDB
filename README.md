@@ -3,6 +3,8 @@
 
 # CAP Theorem
 ![image](https://user-images.githubusercontent.com/4239376/197360738-bf45bf11-c4ff-40ac-b54c-6b2975438efe.png)
+![image](https://github.com/Glareone/MongoDB-NoSQL/assets/4239376/7554bc7f-0b9c-4f72-803f-c2848e23973b)
+
 
 # Extra materials. DynamoDB. CosmosDB
 Quering AWS DynamoDB in .NET (Rahul Nath) https://www.rahulpnath.com/blog/dynamodb-querying-dotnet/

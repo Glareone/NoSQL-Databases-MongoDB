@@ -1,9 +1,6 @@
-using System;
-using System.Linq;
 using System.Reflection;
-using Microsoft.AspNetCore.Routing;
 
-namespace MongoDB.WebAPI;
+namespace MongoDB.WebAPI.Endpoints;
 
 // Using Reflection we may find all registered IEndpointRouteHandlers like PeopleHelper and register them all
 public static class EndpointRouteBuilderExtensions

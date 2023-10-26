@@ -1,3 +1,7 @@
+# MongoDB meets C# minimalAPI & consoleApp
+https://github.com/Glareone/NoSQL-Databases-MongoDB/tree/master/MongoDB
+
+
 # NoSql (Mongo\Redis) vs SQL
 ![image](https://user-images.githubusercontent.com/4239376/193664749-52914404-c0a0-4a5b-a566-7a20ae5eba29.png)
 
@@ -32,7 +36,7 @@ Also good article: https://www.enterpriseintegrationpatterns.com/ramblings/18_st
 ![image](https://github.com/Glareone/MongoDB-NoSQL/assets/4239376/696dd97f-adfb-4702-b4ce-42a677f0c77e)
 
 
-# MongoDB Basics
+# MongoDB. Theoretical Part
 
 <details>
 <summary>Section - 1: Introduction</summary>

@@ -31,4 +31,16 @@ public class CourseService
     {
         await _courseCollection.DeleteOneAsync(id);
     }
+
+    public async Task<bool> UpdateAsync(string oldCourseName, string newCourseName)
+    {
+        var filter = Builders<Course>.Filter
+            .Eq(restaurant => restaurant.CourseName, oldCourseName);
+        var update = Builders<Course>.Update
+            .Set(restaurant => restaurant.CourseName, newCourseName);
+        
+        var result = await _courseCollection.UpdateOneAsync(filter, update);
+
+        return result.ModifiedCount > 0;
+    }
 }

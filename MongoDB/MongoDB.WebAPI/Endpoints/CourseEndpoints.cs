@@ -1,14 +1,10 @@
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 using MongoDB.WebAPI.Entities;
 using MongoDB.WebAPI.Service;
 
-namespace MongoDB.WebAPI;
+namespace MongoDB.WebAPI.Endpoints;
 
-public class APIEndpoints : IEndpointRouteHandler
+public class CourseEndpoints : IEndpointRouteHandler
 {
     public void MapEndpoints(IEndpointRouteBuilder app)
     {
@@ -21,6 +17,14 @@ public class APIEndpoints : IEndpointRouteHandler
         app.MapGet("/courses", async (CourseService courseService) => await courseService.GetAsync())
             .Produces<IReadOnlyCollection<Course>>()
             .WithName("Courses")
-            .WithTags("Course Tag");
+            .WithTags("Courses");
+        
+        app.MapPut("/course", async (string oldName, string newName, CourseService courseService) =>
+            {
+                var isUpdated = await courseService.UpdateAsync(oldName.Trim(), newName.Trim());
+                return isUpdated;
+            }).Produces<bool>()
+            .WithName("Course")
+            .WithTags("Courses");
     }
 }

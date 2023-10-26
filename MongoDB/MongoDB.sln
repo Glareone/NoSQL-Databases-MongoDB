@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDB.DriverCourses.Console", "MongoDB.DriverCourses.Console\MongoDB.DriverCourses.Console.csproj", "{7C9093F9-C6EE-4335-89D3-F162BEE0C723}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDB.WebAPI", "MongoDB.WebAPI\MongoDB.WebAPI.csproj", "{65B289B1-57DE-4EF9-A886-98B39251C447}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7C9093F9-C6EE-4335-89D3-F162BEE0C723}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C9093F9-C6EE-4335-89D3-F162BEE0C723}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C9093F9-C6EE-4335-89D3-F162BEE0C723}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C9093F9-C6EE-4335-89D3-F162BEE0C723}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65B289B1-57DE-4EF9-A886-98B39251C447}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65B289B1-57DE-4EF9-A886-98B39251C447}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65B289B1-57DE-4EF9-A886-98B39251C447}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65B289B1-57DE-4EF9-A886-98B39251C447}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

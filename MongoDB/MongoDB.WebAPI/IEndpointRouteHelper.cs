@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Routing;
+
 namespace MongoDB.WebAPI;
 
 public interface IEndpointRouteHandler

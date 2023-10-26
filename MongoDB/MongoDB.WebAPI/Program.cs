@@ -1,6 +1,9 @@
 using System.Reflection;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using MongoDB.WebAPI;
 using MongoDB.WebAPI.MongoDBConfigurations;
 using MongoDB.WebAPI.ProblemDetailsExecutor;

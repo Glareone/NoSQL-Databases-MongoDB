@@ -1,41 +1,6 @@
 # MongoDB meets C# minimalAPI & consoleApp
 https://github.com/Glareone/NoSQL-Databases-MongoDB/tree/master/MongoDB
 
-
-# NoSql (Mongo\Redis) vs SQL
-![image](https://user-images.githubusercontent.com/4239376/193664749-52914404-c0a0-4a5b-a566-7a20ae5eba29.png)
-
-# CAP Theorem
-![image](https://user-images.githubusercontent.com/4239376/197360738-bf45bf11-c4ff-40ac-b54c-6b2975438efe.png)
-![image](https://github.com/Glareone/MongoDB-NoSQL/assets/4239376/7554bc7f-0b9c-4f72-803f-c2848e23973b)
-
-## PACELC. Beyond CAP Theorem.
-![image](https://github.com/Glareone/MongoDB-NoSQL/assets/4239376/3672bfdb-ac54-4616-b9ec-e214db40906e)  
-
-  The PACELC theorem is an extension of the CAP theorem that takes latency and consistency trade-offs into account. PACELC stands for "Partition (P), Availability (A), Consistency (C), Else (E), Latency (L), Consistency (C)." This theorem states that in case of a network partition, a system must choose between availability and consistency (similar to CAP), but when the system is operating normally (no partitions), it must choose between latency and consistency. This highlights the fact that trade-offs exist even in the absence of network partitions.
-
-## ECAP. Extended CAP Theorem with Latency as forth
-The Extended CAP model expands the original CAP theorem by considering latency as a fourth dimension. The ECAP model posits that it is impossible to optimize for all four properties—consistency, availability, partition tolerance, and latency—simultaneously. In this model, system designers must choose which three properties to prioritize, based on the requirements and constraints of their specific application.
-
-## CRDTs and Hybrid Systems. High Availability and Consistency together
-  Convergent Replicated Data Types (CRDTs) are data structures designed to allow multiple replicas to be updated independently and converge to a consistent state without requiring coordination. CRDTs can help system designers achieve both strong eventual consistency and high availability. By combining CRDTs with other techniques, it is possible to build hybrid systems that provide tunable consistency guarantees, enabling applications to make trade-offs based on their specific requirements.
-
-# Extra materials. DynamoDB. CosmosDB
-Quering AWS DynamoDB in .NET (Rahul Nath) https://www.rahulpnath.com/blog/dynamodb-querying-dotnet/
-
-# ACID & BASE in MongoDB
-MongoDB is ACID-compilant at the document level (per ONE document). MongoDB does not support multi-collection (table) transactions. 
-Atomic modifiers in MongoDB can only work against a single document.  
-
-(ACID. Official MongoDB doc)[https://www.mongodb.com/basics/acid-transactions]  
-Also good article: https://www.enterpriseintegrationpatterns.com/ramblings/18_starbucks.html  
-
-# SQL vs NoSql vs Hybrid real-world use cases.
-![image](https://github.com/Glareone/MongoDB-NoSQL/assets/4239376/c98902eb-8aa5-45ca-bf80-ba727391d124)
-![image](https://github.com/Glareone/MongoDB-NoSQL/assets/4239376/46001abf-2e41-4e3b-a9c6-1119723b05cd)
-![image](https://github.com/Glareone/MongoDB-NoSQL/assets/4239376/696dd97f-adfb-4702-b4ce-42a677f0c77e)
-
-
 # MongoDB. Theoretical Part
 
 <details>
@@ -1585,3 +1550,38 @@ use skip and limit:
  .then(result => { res.status(200).json(products); })`
 
 </details>
+
+
+
+# NoSql (Mongo\Redis) vs SQL
+![image](https://user-images.githubusercontent.com/4239376/193664749-52914404-c0a0-4a5b-a566-7a20ae5eba29.png)
+
+# CAP Theorem
+![image](https://user-images.githubusercontent.com/4239376/197360738-bf45bf11-c4ff-40ac-b54c-6b2975438efe.png)
+![image](https://github.com/Glareone/MongoDB-NoSQL/assets/4239376/7554bc7f-0b9c-4f72-803f-c2848e23973b)
+
+## PACELC. Beyond CAP Theorem.
+![image](https://github.com/Glareone/MongoDB-NoSQL/assets/4239376/3672bfdb-ac54-4616-b9ec-e214db40906e)  
+
+  The PACELC theorem is an extension of the CAP theorem that takes latency and consistency trade-offs into account. PACELC stands for "Partition (P), Availability (A), Consistency (C), Else (E), Latency (L), Consistency (C)." This theorem states that in case of a network partition, a system must choose between availability and consistency (similar to CAP), but when the system is operating normally (no partitions), it must choose between latency and consistency. This highlights the fact that trade-offs exist even in the absence of network partitions.
+
+## ECAP. Extended CAP Theorem with Latency as forth
+The Extended CAP model expands the original CAP theorem by considering latency as a fourth dimension. The ECAP model posits that it is impossible to optimize for all four properties—consistency, availability, partition tolerance, and latency—simultaneously. In this model, system designers must choose which three properties to prioritize, based on the requirements and constraints of their specific application.
+
+## CRDTs and Hybrid Systems. High Availability and Consistency together
+  Convergent Replicated Data Types (CRDTs) are data structures designed to allow multiple replicas to be updated independently and converge to a consistent state without requiring coordination. CRDTs can help system designers achieve both strong eventual consistency and high availability. By combining CRDTs with other techniques, it is possible to build hybrid systems that provide tunable consistency guarantees, enabling applications to make trade-offs based on their specific requirements.
+
+# Extra materials. DynamoDB. CosmosDB
+Quering AWS DynamoDB in .NET (Rahul Nath) https://www.rahulpnath.com/blog/dynamodb-querying-dotnet/
+
+# ACID & BASE in MongoDB
+MongoDB is ACID-compilant at the document level (per ONE document). MongoDB does not support multi-collection (table) transactions. 
+Atomic modifiers in MongoDB can only work against a single document.  
+
+(ACID. Official MongoDB doc)[https://www.mongodb.com/basics/acid-transactions]  
+Also good article: https://www.enterpriseintegrationpatterns.com/ramblings/18_starbucks.html  
+
+# SQL vs NoSql vs Hybrid real-world use cases.
+![image](https://github.com/Glareone/MongoDB-NoSQL/assets/4239376/c98902eb-8aa5-45ca-bf80-ba727391d124)
+![image](https://github.com/Glareone/MongoDB-NoSQL/assets/4239376/46001abf-2e41-4e3b-a9c6-1119723b05cd)
+![image](https://github.com/Glareone/MongoDB-NoSQL/assets/4239376/696dd97f-adfb-4702-b4ce-42a677f0c77e)
